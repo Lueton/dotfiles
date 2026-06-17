@@ -9,9 +9,13 @@ log_info "Installing i3, polybar, rofi, picom, dunst..."
 sudo apt install -y i3 polybar rofi dunst feh picom xorg dex xss-lock
 
 # Dynamic workspace icons daemon
+if ! is_installed pipx; then
+    sudo apt install -y pipx
+    pipx ensurepath
+fi
 if ! is_installed i3-workspace-names-daemon; then
     log_info "Installing i3-workspace-names-daemon..."
-    pip3 install --user i3-workspace-names-daemon
+    pipx install i3-workspace-names-daemon
 fi
 
 # Symlink all WM configs

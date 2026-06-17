@@ -8,8 +8,11 @@ section "Theming & Color Schemes" "🎨"
 # pywal
 if ! is_installed wal; then
     log_info "Installing pywal..."
-    pip3 install --user pywal
-    # pip --user installs to ~/.local/bin, make it available immediately
+    if ! is_installed pipx; then
+        sudo apt install -y pipx
+        pipx ensurepath
+    fi
+    pipx install pywal
     export PATH="$HOME/.local/bin:$PATH"
 fi
 
