@@ -29,7 +29,9 @@ if [ ! -d "$HOME/.pyenv" ]; then
     curl https://pyenv.run | bash
     export PYENV_ROOT="$HOME/.pyenv"
     export PATH="$PYENV_ROOT/bin:$PATH"
+    set +u
     eval "$(pyenv init -)"
+    set -u
     pyenv install "$PYTHON_VERSION"
     pyenv global "$PYTHON_VERSION"
     log_success "Python $PYTHON_VERSION installed via pyenv"
