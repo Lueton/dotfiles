@@ -44,10 +44,12 @@ if [ ! -d "$HOME/.sdkman" ]; then
     log_info "☕  Installing sdkman..."
     curl -s "https://get.sdkman.io" | bash
     # shellcheck disable=SC1091
+    set +u
     source "$HOME/.sdkman/bin/sdkman-init.sh"
     sdk install java "$JAVA_17"
     sdk install java "$JAVA_21"
     sdk default java "$JAVA_DEFAULT"
+    set -u
     log_success "Java $JAVA_17 and $JAVA_21 installed (default: $JAVA_DEFAULT)"
 fi
 
