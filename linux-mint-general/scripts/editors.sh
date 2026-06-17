@@ -32,8 +32,10 @@ if [ ! -f "$TOOLBOX_BIN" ]; then
     curl -fL "https://download.jetbrains.com/toolbox/jetbrains-toolbox-${TOOLBOX_VERSION}.tar.gz" \
         -o "$local_tmp/toolbox.tar.gz"
     tar -xzf "$local_tmp/toolbox.tar.gz" -C "$local_tmp"
-    "$local_tmp"/jetbrains-toolbox-*/jetbrains-toolbox &
+    mkdir -p "$(dirname "$TOOLBOX_BIN")"
+    cp "$local_tmp"/jetbrains-toolbox-*/jetbrains-toolbox "$TOOLBOX_BIN"
     rm -rf "$local_tmp"
+    "$TOOLBOX_BIN" &
     log_warn "JetBrains Toolbox launched — complete the installation in the UI"
 fi
 
