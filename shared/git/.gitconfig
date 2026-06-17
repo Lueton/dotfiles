@@ -1,0 +1,97 @@
+[user]
+	name  = Dein Name
+	email = deine@email.de
+
+[core]
+	editor      = nvim
+	autocrlf    = input
+	whitespace  = trailing-space,space-before-tab
+
+[init]
+	defaultBranch = main
+
+[pull]
+	rebase = true
+
+[push]
+	default         = current
+	autoSetupRemote = true
+
+[rebase]
+	autoStash = true
+
+[alias]
+	# ── Status & Info ────────────────────────────────────────
+	st          = status -sb
+	last        = log -1 HEAD --stat
+	aliases     = !git config --get-regexp '^alias\\.' | sed 's/alias\\.//;s/ /\\t→ /'
+	contributors = shortlog --summary --numbered --no-merges
+
+	# ── Branching ────────────────────────────────────────────
+	co          = checkout
+	cob         = checkout -b
+	br          = branch -vv
+	bra         = branch -vv --all
+	gone        = !git fetch -p && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -d
+
+	# ── Committing ───────────────────────────────────────────
+	ci          = commit
+	cm          = commit -m
+	amend       = commit --amend --no-edit
+	amendm      = commit --amend
+	undo        = reset --soft HEAD~1
+	fixup       = !git log --oneline -20 | fzf | awk '{print $1}' | xargs git commit --fixup
+
+	# ── Diffing ──────────────────────────────────────────────
+	df          = diff
+	ds          = diff --staged
+	dfw         = diff --word-diff
+
+	# ── Log ──────────────────────────────────────────────────
+	lg          = log --oneline --graph --decorate --date=short \
+	              --format='%C(yellow)%h%C(reset) %C(cyan)%cd%C(reset) %s %C(dim)%an%C(reset)%C(auto)%d'
+	lga         = lg --all
+	lgs         = log --oneline --graph --decorate -15
+
+	# ── Remote ───────────────────────────────────────────────
+	pushf       = push --force-with-lease
+	pub         = !git push -u origin $(git branch --show-current)
+
+	# ── Working tree ─────────────────────────────────────────
+	unstage     = restore --staged
+	discard     = restore .
+	stash-all   = stash push --include-untracked
+	root        = rev-parse --show-toplevel
+	cleanup     = !git branch --merged main | grep -v '\\*\\|main\\|master' | xargs git branch -d
+
+[color]
+	ui     = auto
+	diff   = auto
+	status = auto
+	branch = auto
+
+[color "branch"]
+	current = yellow bold
+	local   = green
+	remote  = cyan
+
+[color "diff"]
+	meta = yellow
+	frag = magenta bold
+	old  = red bold
+	new  = green bold
+
+[color "status"]
+	added     = green bold
+	changed   = yellow bold
+	untracked = red
+
+[diff]
+	algorithm     = histogram
+	colorMoved    = default
+
+[merge]
+	conflictstyle = zdiff3
+
+[log]
+	date = iso
