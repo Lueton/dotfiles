@@ -14,10 +14,12 @@ if [ ! -d "$HOME/.nvm" ]; then
     curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/v${NVM_VERSION}/install.sh" | bash
     export NVM_DIR="$HOME/.nvm"
     # shellcheck disable=SC1091
+    set +u
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
     nvm install --lts
     nvm use --lts
     nvm alias default node
+    set -u
     log_success "Node.js LTS installed via nvm"
 fi
 
