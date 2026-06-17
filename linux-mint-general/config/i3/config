@@ -14,7 +14,7 @@ set $menu   rofi -show drun
 bindsym $mod+Return       exec $term
 bindsym $mod+d            exec $menu
 bindsym $mod+Shift+b      exec firefox
-bindsym $mod+Shift+e      exec nemo
+bindsym $mod+Shift+n      exec nemo
 
 # Kill focused window
 bindsym $mod+Shift+q kill
