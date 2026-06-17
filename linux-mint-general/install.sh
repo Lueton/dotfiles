@@ -32,5 +32,4 @@ if [ ! -d "$DOTFILES_DIR" ]; then
     git clone "$REPO_URL" "$DOTFILES_DIR"
 fi
 
-cd "$DOTFILES_DIR"
-make all
+make -C "$DOTFILES_DIR/linux-mint-general" all
