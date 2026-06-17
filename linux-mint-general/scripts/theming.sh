@@ -13,6 +13,7 @@ if ! is_installed wal; then
         pipx ensurepath
     fi
     pipx install pywal
+    pipx inject pywal haishoku
     export PATH="$HOME/.local/bin:$PATH"
 fi
 
