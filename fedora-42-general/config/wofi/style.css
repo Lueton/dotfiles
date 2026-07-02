@@ -16,11 +16,14 @@ window {
     color: @foreground;
     border: 2px solid @color2;
     border-radius: 8px;
+    opacity: 0.90;
 }
 
 #outer-box {
+    margin: 10px 10px 20px 10px;
     background-color: @background;
     color: @foreground;
+    opacity: 0.90;
 }
 
 #input {
@@ -32,12 +35,14 @@ window {
 }
 
 #inner-box {
+    margin: 10px;
     background-color: @background;
-    margin: 4px;
+    opacity: 0.90;
 }
 
 #entry {
     padding: 6px 10px;
+    border-radius: 8px;
 }
 
 #entry:selected {
