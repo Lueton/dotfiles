@@ -62,11 +62,12 @@ PACKAGES=(
 
 sudo dnf install -y "${PACKAGES[@]}"
 
-if ! rpm -q intel-media-driver-freeworld &>/dev/null; then
-    log_info "Installing intel-media-driver-freeworld (VA-API hardware acceleration)..."
-    sudo dnf install -y --allowerasing intel-media-driver-freeworld
+if ! rpm -q intel-media-driver &>/dev/null; then
+    log_info "Installing intel-media-driver (VA-API hardware acceleration)..."
+    sudo dnf install -y --allowerasing intel-media-driver \
+        || log_warn "intel-media-driver install failed — skipping VA-API setup, rest of packages.sh continues"
 else
-    log_info "intel-media-driver-freeworld already installed, skipping"
+    log_info "intel-media-driver already installed, skipping"
 fi
 
 log_success "Core packages installed"
