@@ -150,10 +150,14 @@ exec        nm-applet
 exec        mako
 exec        swaybg -i "$HOME/wallpapers/current" -m fill 2>/dev/null || true
 exec        waybar
+# -f/--daemonize dropped from swaylock calls below: it forks away from the
+# invoking process before the lock surface's first frame is guaranteed to be
+# rendered, which can leave the screen looking unlocked/transparent. swayidle
+# already runs its commands as separate processes, so it isn't needed anyway.
 exec        swayidle -w \
-                timeout 300 'swaylock -f -c 000000' \
-                timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
-                before-sleep 'swaylock -f -c 000000'
+                timeout 3600 'swaylock -c 000000' \
+                timeout 3900 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
+                before-sleep 'swaylock -c 000000'
 
 # ── Floating rules ───────────────────────────────────────
 for_window [app_id="pavucontrol"]           floating enable
