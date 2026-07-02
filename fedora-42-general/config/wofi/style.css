@@ -1,0 +1,30 @@
+@import "colors-wofi.css";
+
+window {
+    background-color: @background;
+    color: @foreground;
+    border: 2px solid @color2;
+    border-radius: 8px;
+}
+
+#input {
+    margin: 8px;
+    padding: 8px;
+    background-color: @color0;
+    color: @foreground;
+    border-radius: 4px;
+}
+
+#inner-box {
+    margin: 4px;
+}
+
+#entry {
+    padding: 6px 10px;
+}
+
+#entry:selected {
+    background-color: @color2;
+    color: @background;
+    border-radius: 4px;
+}

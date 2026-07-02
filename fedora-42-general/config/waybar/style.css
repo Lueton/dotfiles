@@ -1,0 +1,43 @@
+@import "colors-waybar.css";
+
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 13px;
+    min-height: 0;
+}
+
+window#waybar {
+    background-color: @background;
+    color: @foreground;
+}
+
+#workspaces button {
+    padding: 0 8px;
+    background-color: transparent;
+    color: @color5;
+}
+
+#workspaces button.focused {
+    background-color: @color2;
+    color: @foreground;
+}
+
+#workspaces button.urgent {
+    background-color: @color1;
+    color: @foreground;
+}
+
+#window,
+#clock,
+#cpu,
+#memory,
+#network,
+#pulseaudio,
+#tray {
+    padding: 0 10px;
+}
+
+#cpu        { color: @color2; }
+#memory     { color: @color4; }
+#network    { color: @color6; }
+#pulseaudio { color: @color3; }
