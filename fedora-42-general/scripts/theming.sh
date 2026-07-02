@@ -33,7 +33,7 @@ chmod +x "$DOTFILES_DIR/scripts/wallpaper.sh"
 DEFAULT_WALLPAPER="$HOME/wallpapers/lunar-tides.jpg"
 if [ -f "$DEFAULT_WALLPAPER" ]; then
     log_info "Generating initial color scheme from lunar-tides.jpg..."
-    wal -i "$DEFAULT_WALLPAPER" --backend haishoku --skip-wallpaper -q
+    wal -i "$DEFAULT_WALLPAPER" --backend haishoku -n -q
     ln -sf "$DEFAULT_WALLPAPER" "$HOME/wallpapers/current"
 
     mkdir -p "$HOME/.config/mako"

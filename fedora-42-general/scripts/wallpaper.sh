@@ -33,7 +33,7 @@ echo -e "     ${DIM}·  $WALLPAPER${NC}"
 echo ""
 
 # pywal has no Wayland wallpaper backend — skip it, swaybg is managed explicitly below
-wal -i "$WALLPAPER" --skip-wallpaper
+wal -i "$WALLPAPER" -n
 
 # Reload sway colors without restarting
 pgrep -x sway > /dev/null && swaymsg reload

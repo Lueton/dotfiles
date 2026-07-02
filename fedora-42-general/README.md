@@ -183,7 +183,7 @@ config/wofi/config, style.css         → ~/.config/wofi/
 
 KDE Plasma bekommt **kein** Theming durch dieses Setup — die Fallback-Session behält, was du dort manuell einstellst.
 
-> pywal hat kein Wayland-Wallpaper-Backend. `wal -i` läuft daher mit `--skip-wallpaper`; das Wallpaper wird explizit über `swaybg` gesetzt (siehe Theming-System unten).
+> pywal hat kein Wayland-Wallpaper-Backend. `wal -i` läuft daher mit `-n`; das Wallpaper wird explizit über `swaybg` gesetzt (siehe Theming-System unten).
 
 ---
 
@@ -222,7 +222,7 @@ Das pywal-Theming generiert ein Farbschema aus dem Wallpaper und überträgt es 
 wallpaper ~/wallpapers/mein-bild.jpg
 
 # Mit einem vordefinierten pywal-Theme
-wal --theme catppuccin-mocha --skip-wallpaper
+wal --theme catppuccin-mocha -n
 ```
 
 ### 3. Sway starten
@@ -237,7 +237,7 @@ Das Theming basiert auf **pywal** und ist vollständig dynamisch — für die Sw
 
 ```
 Wallpaper
-    └─▶ pywal generiert Farbpalette (--skip-wallpaper)
+    └─▶ pywal generiert Farbpalette (-n)
             ├─▶ Sway (swaymsg reload)
             ├─▶ Kitty (SIGUSR1)
             ├─▶ Waybar (SIGUSR2 — Live-Reload, kein Neustart)
