@@ -167,10 +167,12 @@ Symlinks:
 ```
 config/sway/  → ~/.config/sway/
 config/waybar/config.jsonc, style.css → ~/.config/waybar/
-config/wofi/config, style.css         → ~/.config/wofi/
+config/wofi/    → ~/.config/wofi/
 ```
 
 > **Mako** wird **nicht** symlinkt — pywal generiert `~/.config/mako/config` bei jedem Wallpaper-Wechsel neu. Beim ersten Start wird eine statische Fallback-Config kopiert.
+>
+> **Wofi** löst relative `@import`-Pfade in `style.css` gegen `$HOME` auf, nicht gegen das Verzeichnis der CSS-Datei selbst (gefunden via `WAYLAND_DEBUG=1 wofi --show drun`, bestätigt durch eine GTK-Fehlermeldung). `style.css` importiert deshalb bewusst `.cache/wal/colors-wofi.css` (ohne führenden Slash, ohne `~`) — landet nach der `$HOME`-Auflösung direkt beim echten pywal-Cache. Kein Symlink-Trick, kein hartcodierter Username nötig.
 
 ---
 
@@ -242,6 +244,7 @@ Wallpaper
             ├─▶ Kitty (SIGUSR1)
             ├─▶ Waybar (SIGUSR2 — Live-Reload, kein Neustart)
             ├─▶ Mako (Config kopieren + makoctl reload)
+            ├─▶ Wofi (liest ~/.cache/wal live beim nächsten Start, kein Reload nötig)
             └─▶ swaybg (kill + relaunch mit neuem Bild)
 ```
 
@@ -294,7 +297,7 @@ Das `symlink`-Hilfsskript in `utils.sh` sichert bestehende Dateien automatisch:
 - Existiert die Zieldatei bereits als reguläre Datei → wird als `.bak` gespeichert
 - Existiert sie bereits als Symlink → wird direkt überschrieben
 
-Waybar und Wofi bekommen zusätzlich einen separaten Symlink `colors-*.css → ~/.cache/wal/colors-*.css` innerhalb ihres Config-Verzeichnisses, da GTK-CSS `~`/`$HOME` in `@import` nicht auflösen kann.
+Waybar bekommt zusätzlich einen separaten Symlink `colors-waybar.css → ~/.cache/wal/colors-waybar.css` innerhalb seines Config-Verzeichnisses, da GTK-CSS `~` in `@import` nicht auflöst und Waybar relative Pfade gegen das Verzeichnis der CSS-Datei auflöst. Wofi braucht diesen Trick nicht — es löst relative `@import`-Pfade ohnehin gegen `$HOME` auf (siehe oben), `style.css` importiert daher direkt `.cache/wal/colors-wofi.css`.
 
 ---
 

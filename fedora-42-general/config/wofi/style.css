@@ -1,10 +1,26 @@
-@import "colors-wofi.css";
+/* Wofi resolves relative @import paths against $HOME, not against this file's own
+   directory (confirmed via WAYLAND_DEBUG=1 wofi --show drun) — so this path is written
+   relative to $HOME on purpose, it is not a mistake. */
+@import ".cache/wal/colors-wofi.css";
+
+* {
+    border: none;
+    box-shadow: none;
+    outline: none;
+}
 
 window {
+    font-size: 14px;
+    font-family: "JetBrains Mono";
     background-color: @background;
     color: @foreground;
     border: 2px solid @color2;
     border-radius: 8px;
+}
+
+#outer-box {
+    background-color: @background;
+    color: @foreground;
 }
 
 #input {
@@ -16,6 +32,7 @@ window {
 }
 
 #inner-box {
+    background-color: @background;
     margin: 4px;
 }
 

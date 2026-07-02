@@ -53,7 +53,7 @@ cp "$HOME/.cache/wal/mako" "$HOME/.config/mako/config"
 makoctl reload 2>/dev/null || (mako &)
 echo -e "  ${B_GREEN}✓${NC}  mako reloaded"
 
-# wofi has no reload code, reads its colors live on next launch
+# wofi has no reload code, reads its colors live from ~/.cache/wal on next launch
 
 # swaybg has no live-reload — kill and relaunch with the new wallpaper
 ln -sf "$WALLPAPER" "$HOME/wallpapers/current"

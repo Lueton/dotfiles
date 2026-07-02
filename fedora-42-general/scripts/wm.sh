@@ -20,17 +20,16 @@ sudo systemctl enable --force sddm.service
 # Sway has no generated files inside its config dir, so the whole directory can be symlinked
 symlink "$DOTFILES_DIR/config/sway" "$HOME/.config/sway"
 
-# Waybar/Wofi: symlink files individually, not the whole dir — each also gets a
-# colors-*.css symlink into ~/.cache/wal, which must not land inside the git repo
+# Waybar: symlink files individually, not the whole dir — the colors-waybar.css
+# symlink into ~/.cache/wal below must not land inside the git repo
 mkdir -p "$HOME/.config/waybar"
 symlink "$DOTFILES_DIR/config/waybar/config.jsonc" "$HOME/.config/waybar/config.jsonc"
 symlink "$DOTFILES_DIR/config/waybar/style.css"    "$HOME/.config/waybar/style.css"
 ln -sf "$HOME/.cache/wal/colors-waybar.css" "$HOME/.config/waybar/colors-waybar.css"
 
-mkdir -p "$HOME/.config/wofi"
-symlink "$DOTFILES_DIR/config/wofi/config"    "$HOME/.config/wofi/config"
-symlink "$DOTFILES_DIR/config/wofi/style.css" "$HOME/.config/wofi/style.css"
-ln -sf "$HOME/.cache/wal/colors-wofi.css" "$HOME/.config/wofi/colors-wofi.css"
+# Wofi has no generated files inside its config dir either: style.css imports colors
+# straight from ~/.cache/wal (see its own comment for why), so the whole dir can be symlinked
+symlink "$DOTFILES_DIR/config/wofi" "$HOME/.config/wofi"
 
 # Mako is not symlinked — pywal regenerates ~/.config/mako/config on each 'wallpaper' call
 # copy static fallback for first boot (before any wallpaper is set)
