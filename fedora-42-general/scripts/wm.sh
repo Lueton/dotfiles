@@ -13,7 +13,9 @@ sudo dnf group install -y "kde-desktop-environment"
 
 log_info "Installing SDDM..."
 sudo dnf install -y sddm
-sudo systemctl enable sddm.service
+# --force: some Fedora KDE installs already alias display-manager.service to another
+# greeter (e.g. plasmalogin.service) — SDDM must own it so Sway/Plasma are selectable there
+sudo systemctl enable --force sddm.service
 
 # Sway has no generated files inside its config dir, so the whole directory can be symlinked
 symlink "$DOTFILES_DIR/config/sway" "$HOME/.config/sway"
