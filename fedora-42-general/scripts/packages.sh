@@ -63,8 +63,8 @@ PACKAGES=(
 sudo dnf install -y "${PACKAGES[@]}"
 
 if ! rpm -q intel-media-driver-freeworld &>/dev/null; then
-    log_info "Swapping to intel-media-driver-freeworld (VA-API hardware acceleration)..."
-    sudo dnf swap -y libva-intel-driver intel-media-driver-freeworld --allowerasing
+    log_info "Installing intel-media-driver-freeworld (VA-API hardware acceleration)..."
+    sudo dnf install -y --allowerasing intel-media-driver-freeworld
 else
     log_info "intel-media-driver-freeworld already installed, skipping"
 fi
