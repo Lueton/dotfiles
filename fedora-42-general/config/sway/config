@@ -121,6 +121,12 @@ bindsym XF86AudioMute        exec pactl set-sink-mute   @DEFAULT_SINK@ toggle
 bindsym XF86MonBrightnessUp   exec brightnessctl set +5%
 bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
 
+# ── Input ────────────────────────────────────────────────
+input "type:keyboard" {
+    xkb_layout "de"
+    xkb_variant "nodeadkeys"
+}
+
 # ── Appearance ───────────────────────────────────────────
 gaps inner 12
 gaps outer 6
