@@ -32,6 +32,9 @@ if [ ! -d "$HOME/.pyenv" ]; then
     set +u
     eval "$(pyenv init -)"
     set -u
+    # Fedora ships Tcl/Tk 9, whose Tcl_Size API change breaks the _tkinter build on
+    # this Python version — skip it, this environment has no need for Tkinter GUI support
+    export PYTHON_CONFIGURE_OPTS="--without-tcltk"
     pyenv install "$PYTHON_VERSION"
     pyenv global "$PYTHON_VERSION"
     log_success "Python $PYTHON_VERSION installed via pyenv"
