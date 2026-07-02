@@ -7,11 +7,6 @@ window {
     border-radius: 8px;
 }
 
-#outer-box {
-    background-color: @background;
-    color: @foreground;
-}
-
 #input {
     margin: 8px;
     padding: 8px;
@@ -21,12 +16,7 @@ window {
 }
 
 #inner-box {
-    background-color: @background;
     margin: 4px;
-}
-
-#scroll {
-    background-color: @background;
 }
 
 #entry {
