@@ -18,6 +18,7 @@ Automatisiertes Setup für eine vollständige Fedora Entwicklungsumgebung mit Sw
 | Notifications | [Mako](https://github.com/emersion/mako) |
 | Theming | [pywal](https://github.com/dylanaraps/pywal) |
 | Editoren | VS Code, Zed, JetBrains Toolbox |
+| Container Runtime | [Podman](https://podman.io/) (rootless) + `podman-compose` + `podman-docker` (docker-CLI-Kompatibilität) + `podman-tui` |
 | Node.js | [nvm](https://github.com/nvm-sh/nvm) |
 | Python | [pyenv](https://github.com/pyenv/pyenv) |
 | Java | [sdkman](https://sdkman.io/) |
@@ -71,6 +72,7 @@ make terminal   # Kitty
 make wm         # Sway, Waybar, Wofi, Mako, KDE Plasma (Fallback), SDDM
 make theming    # pywal
 make editors    # VS Code, Zed, JetBrains Toolbox
+make containers # Podman, podman-compose, podman-docker, podman-tui
 make shared     # Shared Configs (Git)
 ```
 
@@ -197,6 +199,17 @@ KDE Plasma bekommt **kein** Theming durch dieses Setup — die Fallback-Session 
 
 ---
 
+### `make containers` — Container Runtime
+
+- **Podman** — rootless, daemonless Container-Runtime (Fedoras Standard, kein Docker-Repo nötig)
+- **podman-compose** — Compose-Datei-Support
+- **podman-docker** — stellt `/usr/bin/docker` als echten Wrapper auf `podman` bereit, `docker`-Befehle funktionieren dadurch unverändert (auch in Scripts, nicht nur interaktiv)
+- **podman-tui** — TUI zur Container-/Image-/Volume-Verwaltung, spricht nativ mit Podmans API
+
+Aktiviert zusätzlich den rootless Podman-API-Socket (`systemctl --user enable --now podman.socket`) für Tools, die einen echten Docker-kompatiblen Socket erwarten (z. B. IDE-Erweiterungen), nicht nur die CLI.
+
+---
+
 ### `make shared` — Shared Configs
 
 Symlinkt plattformübergreifende Konfigurationen:
@@ -274,6 +287,7 @@ fedora-42-general/
 │   ├── wm.sh                 # Sway, Waybar, Wofi, Mako, KDE Plasma, SDDM
 │   ├── theming.sh             # pywal
 │   ├── editors.sh              # VS Code, Zed, JetBrains
+│   ├── containers.sh            # Podman, podman-compose, podman-docker, podman-tui
 │   ├── shared.sh                # Shared Configs
 │   └── wallpaper.sh              # Wallpaper + pywal Reload-Kette
 └── config/
