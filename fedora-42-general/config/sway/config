@@ -105,7 +105,7 @@ bindsym $mod+r mode "resize"
 # ── System ───────────────────────────────────────────────
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
-bindsym $mod+Shift+x exec swaylock -c 000000
+bindsym $mod+Shift+x exec hyprlock
 bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit sway?' -B 'Yes, exit' 'swaymsg exit'
 
 # Screenshot
@@ -155,9 +155,9 @@ exec        waybar
 # rendered, which can leave the screen looking unlocked/transparent. swayidle
 # already runs its commands as separate processes, so it isn't needed anyway.
 exec        swayidle -w \
-                timeout 3600 'swaylock -c 000000' \
+                timeout 3600 'hyprlock' \
                 timeout 3900 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
-                before-sleep 'swaylock -c 000000'
+                before-sleep 'hyprlock'
 
 # ── Floating rules ───────────────────────────────────────
 for_window [app_id="pavucontrol"]           floating enable
