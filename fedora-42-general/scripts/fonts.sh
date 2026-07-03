@@ -6,7 +6,7 @@ source "$DOTFILES_DIR/scripts/utils.sh" "$DOTFILES_DIR"
 section "Nerd Fonts" "🔤"
 
 FONT_DIR="$HOME/.local/share/fonts"
-NERD_FONTS_VERSION="3.2.1"
+NERD_FONTS_VERSION="3.4.0"
 
 install_nerd_font() {
     local name="$1"

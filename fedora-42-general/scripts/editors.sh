@@ -27,7 +27,7 @@ fi
 TOOLBOX_BIN="$HOME/.local/share/JetBrains/Toolbox/bin/jetbrains-toolbox"
 if [ ! -f "$TOOLBOX_BIN" ]; then
     log_info "🧰  Installing JetBrains Toolbox..."
-    TOOLBOX_VERSION="2.3.2.31487"
+    TOOLBOX_VERSION="3.6.0.85549"
     local_tmp=$(mktemp -d)
     curl -fL "https://download.jetbrains.com/toolbox/jetbrains-toolbox-${TOOLBOX_VERSION}.tar.gz" \
         -o "$local_tmp/toolbox.tar.gz"

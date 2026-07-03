@@ -5,8 +5,8 @@ source "$DOTFILES_DIR/scripts/utils.sh" "$DOTFILES_DIR"
 
 section "Language Runtimes" "🛠️"
 
-NVM_VERSION="0.39.7"
-PYTHON_VERSION="3.12.3"
+NVM_VERSION="0.40.5"
+PYTHON_VERSION="3.12.10"
 
 # nvm — Node.js version manager
 if [ ! -d "$HOME/.nvm" ]; then
@@ -41,8 +41,8 @@ if [ ! -d "$HOME/.pyenv" ]; then
 fi
 
 # sdkman — Java / JVM toolchain manager
-JAVA_17="17.0.12-tem"
-JAVA_21="21.0.4-tem"
+JAVA_17="17.0.19-tem"
+JAVA_21="21.0.11-tem"
 JAVA_DEFAULT="$JAVA_21"
 
 if [ ! -d "$HOME/.sdkman" ]; then
