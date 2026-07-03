@@ -68,7 +68,7 @@ repo_gpgcheck=1
 gpgkey=https://downloads.1password.com/linux/keys/1password.asc
 EOF
     fi
-    sudo dnf install -y 1password
+    sudo dnf install -y 1password 1password-cli
 fi
 
 log_success "Editors setup complete"
