@@ -53,10 +53,10 @@ cp "$HOME/.cache/wal/mako" "$HOME/.config/mako/config"
 makoctl reload 2>/dev/null || (mako &)
 echo -e "  ${B_GREEN}✓${NC}  mako reloaded"
 
-# Regenerate hyprlock config (hyprlock reads config fresh on each launch — no reload needed)
-mkdir -p "$HOME/.config/hypr"
-cp "$HOME/.cache/wal/hyprlock.conf" "$HOME/.config/hypr/hyprlock.conf"
-echo -e "  ${B_GREEN}✓${NC}  hyprlock colors updated"
+# Regenerate swaylock config (swaylock reads config fresh on each launch — no reload needed)
+mkdir -p "$HOME/.config/swaylock"
+cp "$HOME/.cache/wal/swaylock" "$HOME/.config/swaylock/config"
+echo -e "  ${B_GREEN}✓${NC}  swaylock colors updated"
 
 # wofi has no reload code, reads its colors live from ~/.cache/wal on next launch
 
