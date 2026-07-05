@@ -72,6 +72,13 @@ else
     log_info "intel-media-driver already installed, skipping"
 fi
 
+if ! flatpak list --app | grep -q "com.spotify.Client"; then
+    log_info "🎵  Installing Spotify..."
+    flatpak install -y flathub com.spotify.Client
+else
+    log_info "Spotify already installed, skipping"
+fi
+
 log_info "Configuring Firefox default homepage and search engine..."
 sudo mkdir -p /etc/firefox/policies
 sudo tee /etc/firefox/policies/policies.json > /dev/null <<'EOF'
