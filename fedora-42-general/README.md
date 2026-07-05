@@ -91,7 +91,7 @@ Die Targets sind idempotent — bereits installierte Komponenten werden überspr
 - **Shell:** `zsh`
 - **Terminal:** `kitty` (Fallback; wird auch via offiziellem Installer installiert)
 - **System Tools:** `htop`, `btop`, `fastfetch`, `tmux`, `brightnessctl`
-- **Modernes CLI:** `ripgrep`, `fd-find`, `bat`
+- **Modernes CLI:** `ripgrep`, `fd-find`, `bat`, `fzf`
 - **Python:** `python3`, `python3-pip` + alle pyenv Build-Dependencies
 - **Audio:** PipeWire-Stack (`pipewire`, `pipewire-pulseaudio`, `wireplumber`, `pavucontrol`)
 - **Netzwerk:** `NetworkManager`, `network-manager-applet`

@@ -42,7 +42,7 @@ PACKAGES=(
     # System tools
     htop btop fastfetch tmux brightnessctl
     # Modern CLI replacements
-    ripgrep fd-find bat
+    ripgrep fd-find bat fzf
     # Fonts infrastructure
     fontconfig
     # Python (for pywal)
