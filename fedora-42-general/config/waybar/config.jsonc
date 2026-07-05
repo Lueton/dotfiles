@@ -9,10 +9,10 @@
         "clock"
     ],
     "modules-right": [
-        "group/system",
-        "group/info",
+        "mpris",
+        "custom/updates",
         "group/media",
-        "custom/date",
+        "group/date",
         "tray"
     ],
     "group/left": {
@@ -45,55 +45,11 @@
         "exec": "LC_TIME=de_DE.utf8 date '+%A, %-d. %B'",
         "interval": 60
     },
-    "group/system": {
-        "orientation": "horizontal",
-        "modules": [
-            "cpu",
-            "memory",
-            "temperature",
-            "disk"
-        ]
-    },
-    "cpu": {
-        "interval": 2,
-        "format": " {usage}%",
-        "on-click": "kitty -e btop"
-    },
-    "memory": {
-        "interval": 2,
-        "format": "󰍛 {percentage}%",
-        "on-click": "kitty -e btop"
-    },
-    "temperature": {
-        "hwmon-path-abs": "/sys/devices/platform/coretemp.0/hwmon",
-        "input-filename": "temp1_input",
-        "interval": 5,
-        "warning-threshold": 70,
-        "critical-threshold": 85,
-        "format": "{icon} {temperatureC}°C",
-        "format-icons": [
-            "",
-            "",
-            "",
-            "",
-            ""
-        ],
-        "on-click": "kitty -e btop"
-    },
-    "disk": {
-        "path": "/",
-        "interval": 60,
-        "format": "󰋊 {percentage_used}%",
-        "states": {
-            "warning": 80,
-            "critical": 95
-        }
-    },
-    "group/info": {
+    "group/date": {
         "orientation": "horizontal",
         "modules": [
             "custom/weather",
-            "custom/updates"
+            "custom/date"
         ]
     },
     "custom/weather": {
@@ -113,14 +69,13 @@
         "orientation": "horizontal",
         "modules": [
             "network",
-            "pulseaudio",
-            "mpris"
+            "pulseaudio"
         ]
     },
     "network": {
         "interval": 3,
         "format-wifi": "󰤨 {essid}",
-        "format-ethernet": "󰈀 Connected",
+        "format-ethernet": "󰈀 Online",
         "format-disconnected": "󰤭 offline",
         "tooltip-format-ethernet": "{ifname}: {ipaddr}/{cidr}",
         "on-click": "nm-connection-editor"

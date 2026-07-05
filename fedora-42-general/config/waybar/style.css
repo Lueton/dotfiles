@@ -15,10 +15,10 @@ window#waybar {
 /* ---------- shared pill treatment ---------- */
 #left,
 #clock,
-#custom-date,
-#system,
-#info,
+#mpris,
+#custom-updates,
 #media,
+#date,
 #tray {
     background-color: @color0;
     border-radius: 12px;
@@ -54,51 +54,41 @@ window#waybar {
     padding: 0 14px;
 }
 
-/* ---------- right cluster 1: system stats ---------- */
-#cpu, #memory, #temperature, #disk {
-    padding: 0 8px;
+/* ---------- right cluster 1: mpris ---------- */
+#mpris {
+    padding: 0 12px;
+    color: @color15;
 }
 
-#cpu         { color: @color15; }
-#memory      { color: @color15; }
-#temperature { color: @color15; }
-#disk        { color: @color15; }
+#mpris.playing { font-weight: bold; }
 
-#temperature.warning  { color: @color3; }
-#temperature.critical { color: @color1; font-weight: bold; }
-#disk.warning          { color: @color3; }
-#disk.critical         { color: @color1; font-weight: bold; }
-
-/* ---------- right cluster 2: ambient info ---------- */
-#custom-weather, #custom-updates {
-    padding: 0 8px;
+/* ---------- right cluster 2: updates ---------- */
+#custom-updates {
+    padding: 0 12px;
     color: @color15;
 }
 
 #custom-updates.pending { color: @color3; font-weight: bold; }
 #custom-updates.idle    { color: @color15; }
-#custom-weather.warning  { color: @color3; }
-#custom-weather.critical { color: @color1; font-weight: bold; }
-#custom-weather.error   { color: @color5; font-style: italic; }
 
 /* ---------- right cluster 3: connectivity + media ---------- */
-#network, #pulseaudio, #mpris {
+#network, #pulseaudio {
     padding: 0 8px;
 }
 
 #network    { color: @color15; }
 #network.ethernet { color: @color2; }
 #pulseaudio { color: @color15; }
-#mpris      { color: @color15; }
 
-#mpris.paused  { color: @color5; }
-#mpris.playing { color: @color4; font-weight: bold; }
-
-/* ---------- right cluster 4: date ---------- */
-#custom-date {
-    padding: 0 14px;
+/* ---------- right cluster 4: weather + date ---------- */
+#custom-weather, #custom-date {
+    padding: 0 8px;
     color: @color15;
 }
+
+#custom-weather.warning  { color: @color3; }
+#custom-weather.critical { color: @color1; font-weight: bold; }
+#custom-weather.error   { color: @color5; font-style: italic; }
 
 /* ---------- tray ---------- */
 #tray {
