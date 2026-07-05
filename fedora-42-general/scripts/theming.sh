@@ -21,27 +21,31 @@ fi
 mkdir -p "$HOME/.config/wal"
 symlink "$DOTFILES_DIR/config/pywal/templates" "$HOME/.config/wal/templates"
 
+# Static color theme (fixed palette, independent of the wallpaper image)
+symlink "$DOTFILES_DIR/config/pywal/colorschemes/tailwind-dark.json" \
+    "$HOME/.config/wal/colorschemes/dark/tailwind-dark.json"
+
 # Wallpapers directory
 symlink "$DOTFILES_DIR/wallpapers" "$HOME/wallpapers"
 
-# wallpaper helper script
+# wallpaper + theme helper scripts
 symlink "$DOTFILES_DIR/scripts/wallpaper.sh" "$HOME/.local/bin/wallpaper"
 chmod +x "$DOTFILES_DIR/scripts/wallpaper.sh"
+symlink "$DOTFILES_DIR/scripts/apply-theme.sh" "$HOME/.local/bin/apply-theme"
+chmod +x "$DOTFILES_DIR/scripts/apply-theme.sh"
 
-# Generate initial color scheme (pywal has no Wayland wallpaper backend — skip it,
-# swaybg is managed explicitly, same as the 'wallpaper' command does)
+# Apply the static color theme (does not depend on a wallpaper image existing)
+log_info "Applying tailwind-dark color theme..."
+bash "$DOTFILES_DIR/scripts/apply-theme.sh" tailwind-dark
+log_success "Color theme applied"
+
+# Set the default wallpaper image, if present
 DEFAULT_WALLPAPER="$HOME/wallpapers/lunar-tides.jpg"
 if [ -f "$DEFAULT_WALLPAPER" ]; then
-    log_info "Generating initial color scheme from lunar-tides.jpg..."
-    wal -i "$DEFAULT_WALLPAPER" --backend haishoku -n -q
     ln -sf "$DEFAULT_WALLPAPER" "$HOME/wallpapers/current"
-
-    mkdir -p "$HOME/.config/mako"
-    cp "$HOME/.cache/wal/mako" "$HOME/.config/mako/config"
-
-    log_success "Initial color scheme generated"
+    log_success "Default wallpaper set"
 else
-    log_warn "Color scheme not yet generated — do this before starting sway:"
+    log_warn "No default wallpaper found — set one before starting sway:"
     log_info "  wallpaper ~/wallpapers/your-image.jpg"
 fi
 

@@ -150,7 +150,7 @@ hide_edge_borders       smart
 
 # Window colors — variables set by colors.sway include
 #                        border      background  text        indicator   child_border
-client.focused           $color2     $color2     $foreground $color6     $color2
+client.focused           $color4     $color4     $foreground $color4     $color4
 client.focused_inactive  $color0     $color0     $color7     $color8     $color0
 client.unfocused         $color0     $background $color5     $color8     $color0
 client.urgent            $color1     $color1     $foreground $color1     $color1

@@ -18,8 +18,8 @@ window#waybar {
 }
 
 #workspaces button.focused {
-    background-color: @color2;
-    color: @foreground;
+    background-color: @color4;
+    color: @color15;
 }
 
 #workspaces button.urgent {
@@ -41,3 +41,7 @@ window#waybar {
 #memory     { color: @color4; }
 #network    { color: @color6; }
 #pulseaudio { color: @color3; }
+
+#clock, #workspaces, #window {
+font-weight: bold;
+}

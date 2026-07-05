@@ -1,6 +1,6 @@
 # Fedora KDE Setup
 
-Automatisiertes Setup für eine vollständige Fedora Entwicklungsumgebung mit Sway (Wayland) als primärer Session, KDE Plasma als Fallback, Kitty Terminal und dynamischem pywal-Theming.
+Automatisiertes Setup für eine vollständige Fedora Entwicklungsumgebung mit Sway (Wayland) als primärer Session, KDE Plasma als Fallback, Kitty Terminal und pywal-Theming mit einem statischen, semantischen Farbschema (unabhängig vom Wallpaper).
 
 ---
 
@@ -172,7 +172,7 @@ config/waybar/config.jsonc, style.css → ~/.config/waybar/
 config/wofi/    → ~/.config/wofi/
 ```
 
-> **Mako** wird **nicht** symlinkt — pywal generiert `~/.config/mako/config` bei jedem Wallpaper-Wechsel neu. Beim ersten Start wird eine statische Fallback-Config kopiert.
+> **Mako** wird **nicht** symlinkt — pywal generiert `~/.config/mako/config` bei jeder Theme-Anwendung (`apply-theme`) neu.
 >
 > **Wofi** löst relative `@import`-Pfade in `style.css` gegen `$HOME` auf, nicht gegen das Verzeichnis der CSS-Datei selbst (gefunden via `WAYLAND_DEBUG=1 wofi --show drun`, bestätigt durch eine GTK-Fehlermeldung). `style.css` importiert deshalb bewusst `.cache/wal/colors-wofi.css` (ohne führenden Slash, ohne `~`) — landet nach der `$HOME`-Auflösung direkt beim echten pywal-Cache. Kein Symlink-Trick, kein hartcodierter Username nötig.
 
@@ -182,12 +182,15 @@ config/wofi/    → ~/.config/wofi/
 
 - Installiert **pywal** via pipx
 - Symlinkt pywal-Templates: `config/pywal/templates/ → ~/.config/wal/templates/`
+- Symlinkt das statische Farbschema: `config/pywal/colorschemes/tailwind-dark.json → ~/.config/wal/colorschemes/dark/tailwind-dark.json`
 - Erstellt `~/wallpapers/` Verzeichnis
-- Installiert das `wallpaper`-Hilfsskript nach `~/.local/bin/wallpaper`
+- Installiert die Hilfsskripte `wallpaper` und `apply-theme` nach `~/.local/bin/`
+- Wendet das `tailwind-dark`-Farbschema sofort an (`apply-theme tailwind-dark`) — unabhängig davon, ob bereits ein Wallpaper-Bild gesetzt ist
+- Setzt das Standard-Wallpaper-Bild (`lunar-tides.jpg`), falls vorhanden
 
 KDE Plasma bekommt **kein** Theming durch dieses Setup — die Fallback-Session behält, was du dort manuell einstellst.
 
-> pywal hat kein Wayland-Wallpaper-Backend. `wal -i` läuft daher mit `-n`; das Wallpaper wird explizit über `swaybg` gesetzt (siehe Theming-System unten).
+> pywal hat kein Wayland-Wallpaper-Backend. `wal --theme ... -n` läuft daher immer mit `-n`; das Wallpaper wird komplett unabhängig davon über `swaybg` gesetzt (siehe Theming-System unten).
 
 ---
 
@@ -228,16 +231,19 @@ shared/git/.gitconfig → ~/.gitconfig
 exec zsh   # Sofort Zsh starten, oder ausloggen und wieder einloggen
 ```
 
-### 2. Wallpaper setzen und Farbschema generieren
+### 2. Wallpaper setzen (optional)
 
-Das pywal-Theming generiert ein Farbschema aus dem Wallpaper und überträgt es auf Sway, Kitty, Waybar und Mako:
+Das Farbschema (`tailwind-dark`) ist bereits durch `make theming` aktiv und **unabhängig vom Wallpaper-Bild**. `wallpaper` ändert nur das Hintergrundbild, nicht die Farben:
 
 ```bash
-# Aus einem eigenen Bild
 wallpaper ~/wallpapers/mein-bild.jpg
+```
 
-# Mit einem vordefinierten pywal-Theme
-wal --theme catppuccin-mocha -n
+Um ein anderes (oder ein eigenes) Farbschema anzuwenden:
+
+```bash
+apply-theme tailwind-dark   # Standard-Theme dieses Setups
+apply-theme catppuccin-mocha   # oder ein beliebiges pywal-Theme / eigene JSON-Datei
 ```
 
 ### 3. Sway starten
@@ -248,26 +254,46 @@ wal --theme catppuccin-mocha -n
 
 ## Theming-System
 
-Das Theming basiert auf **pywal** und ist vollständig dynamisch — für die Sway-Session:
+Das Theming basiert auf **pywal**, verwendet aber ein **statisches, fest entworfenes Farbschema** (`tailwind-dark`) statt einer aus dem Wallpaper extrahierten Palette — ein einfarbiges (schwarz/grau/weißes) Wallpaper würde sonst eine praktisch einfarbige Palette erzeugen und z. B. Waybar-Module, Mako-Dringlichkeitsstufen oder Git-Diff-Farben im Terminal ununterscheidbar machen. Wallpaper-Bild und Farbschema sind dadurch **vollständig entkoppelt**:
 
 ```
-Wallpaper
-    └─▶ pywal generiert Farbpalette (-n)
+apply-theme <name>                    wallpaper <bild>
+    └─▶ wal --theme <name> -n              └─▶ swaybg (kill + relaunch mit neuem Bild)
             ├─▶ Sway (swaymsg reload)
             ├─▶ Kitty (SIGUSR1)
             ├─▶ Waybar (SIGUSR2 — Live-Reload, kein Neustart)
             ├─▶ Mako (Config kopieren + makoctl reload)
-            ├─▶ Wofi (liest ~/.cache/wal live beim nächsten Start, kein Reload nötig)
-            └─▶ swaybg (kill + relaunch mit neuem Bild)
+            └─▶ Wofi (liest ~/.cache/wal live beim nächsten Start, kein Reload nötig)
 ```
+
+`apply-theme` ändert nie das Wallpaper-Bild, `wallpaper` ändert nie die Farben. `wal --theme` parst ausschließlich die JSON-Datei des gewählten Schemas — keine Bildanalyse, keine Farbextraktion (siehe `pywal/theme.py`).
 
 KDE Plasma wird von diesem Setup **gar nicht** angefasst — Theme, Farben, Panels bleiben, wie du sie dort selbst konfigurierst.
 
-Das `wallpaper`-Kommando orchestriert den gesamten Prozess:
+### Semantische Farbrollen (`tailwind-dark`)
 
-```bash
-wallpaper /pfad/zum/bild.jpg
-```
+Jede der 16 pywal-Farbslots hat eine feste Bedeutung, angelehnt an Tailwind-CSS-Farbfamilien:
+
+| Rolle | Slot | Tailwind | Hex |
+|---|---|---|---|
+| `surface` (Hintergrund) | `background` | slate-950 | `#020617` |
+| `text-primary` | `foreground` | slate-200 | `#e2e8f0` |
+| `cursor` / `primary` | `cursor`, `color4` | indigo-500 | `#6366f1` |
+| `surface-alt` | `color0` | slate-900 | `#0f172a` |
+| `error` | `color1` | rose-500 | `#f43f5e` |
+| `success` | `color2` | emerald-500 | `#10b981` |
+| `warning` | `color3` | amber-500 | `#f59e0b` |
+| `neutral-dim` | `color5` | slate-500 | `#64748b` |
+| `info` | `color6` | cyan-500 | `#06b6d4` |
+| `text-muted` | `color7` | slate-400 | `#94a3b8` |
+| `color8`-`color14` | *_bright-Varianten von oben (Hover/Emphasis)* | — | siehe `config/pywal/colorschemes/tailwind-dark.json` |
+| bright white / emphasis | `color15` | slate-50 | `#f8fafc` |
+
+`primary` (indigo) markiert überall "fokussiert/aktiv" (fokussiertes Sway-Fenster, aktiver Waybar-Workspace, ausgewählter Wofi-Eintrag) — bewusst getrennt von `success` (grün), das zuvor beide Bedeutungen trug. Waybar-Module (`cpu`/`memory`/`network`/`pulseaudio`) dürfen die Akzentfarben frei zur Kategorisierung wiederverwenden, ohne dass das einen Status (Fehler/Erfolg) impliziert — die Bedeutung ist kontextabhängig pro Fläche, nicht global.
+
+Für Text auf farbigem Grund (z. B. eine Mako-Notification oder ein Waybar-Pill) gilt: heller Text (`color15`) auf `primary`, dunkler Text (`background`) auf `success`/`warning`/`error`/`info` — kontrastgeprüft nach WCAG-Luminanz.
+
+Ein eigenes Farbschema erstellen: JSON-Datei nach dem Schema in `config/pywal/colorschemes/tailwind-dark.json` anlegen (`special.background/foreground/cursor` + `colors.color0`–`color15`), unter `config/pywal/colorschemes/<name>.json` ablegen, in `theming.sh` einen zusätzlichen `symlink`-Aufruf nach `~/.config/wal/colorschemes/dark/<name>.json` ergänzen, danach `apply-theme <name>`.
 
 ---
 
@@ -289,7 +315,8 @@ fedora-42-general/
 │   ├── editors.sh              # VS Code, Zed, JetBrains
 │   ├── containers.sh            # Podman, podman-compose, podman-docker, podman-tui
 │   ├── shared.sh                # Shared Configs
-│   └── wallpaper.sh              # Wallpaper + pywal Reload-Kette
+│   ├── wallpaper.sh              # Setzt nur das Wallpaper-Bild (swaybg)
+│   └── apply-theme.sh             # Wendet ein pywal-Farbschema an + Reload-Kette
 └── config/
     ├── sway/                # Sway Konfiguration
     ├── waybar/               # Waybar Konfiguration + Style
@@ -299,7 +326,8 @@ fedora-42-general/
     ├── zsh/                        # .zshrc, .zprofile
     ├── starship/                    # starship.toml
     └── pywal/
-        └── templates/                # pywal Templates (colors.sway, colors-waybar.css, colors-wofi.css, mako)
+        ├── templates/                # pywal Templates (colors.sway, colors-waybar.css, colors-wofi.css, mako)
+        └── colorschemes/               # Statische Farbschemata (tailwind-dark.json)
 ```
 
 ---
@@ -332,7 +360,11 @@ waybar -l debug
 
 **pywal Farben werden nicht übernommen**
 
-Sicherstellen, dass `wallpaper <bild>` mindestens einmal ausgeführt wurde, bevor Sway gestartet wird. Die Konfiguration von Sway, Waybar und Mako enthält pywal-Variablen, die erst nach dem ersten Lauf existieren.
+`make theming` ruft `apply-theme tailwind-dark` bereits automatisch auf. Falls die Konfiguration von Sway, Waybar oder Mako trotzdem noch pywal-Variablen ohne Werte zeigt, einmal manuell nachholen:
+
+```bash
+apply-theme tailwind-dark
+```
 
 **JetBrains Toolbox: Setup abschließen**
 
