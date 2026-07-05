@@ -31,7 +31,8 @@ window#waybar {
     color: @color15;
 }
 
-#workspaces button.focused {
+#workspaces button.focused,
+#workspaces button.visible {
     background-color: @color4;
     color: @color15;
     border-radius: 10px;
