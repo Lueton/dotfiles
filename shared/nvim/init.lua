@@ -15,6 +15,10 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   spec = {
-    -- plugins will go here
+    {
+      "folke/which-key.nvim",
+      event = "VeryLazy",
+      opts = {},
+    },
   },
 })
