@@ -1,9 +1,9 @@
 SHELL    := /bin/bash
 DOTFILES := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
-.PHONY: all packages fonts languages shell terminal wm theming editors containers shared
+.PHONY: all packages fonts languages shell terminal wm theming editors containers ssh shared
 
-all: packages fonts languages shell terminal wm theming editors containers shared
+all: packages fonts languages shell terminal wm theming editors containers ssh shared
 	@echo ""
 	@echo -e "\033[1;32m  ╭────────────────────────────────────────────────\033[0m"
 	@echo -e "\033[1;32m  │\033[0m  ✅  \033[1;37mSetup complete!\033[0m"
@@ -37,6 +37,9 @@ editors:
 
 containers:
 	@bash "$(DOTFILES)/scripts/containers.sh" "$(DOTFILES)"
+
+ssh:
+	@bash "$(DOTFILES)/scripts/ssh.sh" "$(DOTFILES)"
 
 shared:
 	@bash "$(DOTFILES)/scripts/shared.sh" "$(DOTFILES)"

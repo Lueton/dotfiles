@@ -23,6 +23,7 @@ Automatisiertes Setup für eine vollständige Fedora Entwicklungsumgebung mit Sw
 | Python | [pyenv](https://github.com/pyenv/pyenv) |
 | Java | [sdkman](https://sdkman.io/) |
 | Build Tool | Maven (via sdkman) |
+| SSH Access | OpenSSH (key-only) |
 
 Reine Wayland-Session — kein X11 (kein Xorg, kein XWayland-Tooling in den Scripts).
 
@@ -74,6 +75,7 @@ make wm         # Sway, Waybar, Wofi, Mako, KDE Plasma (Fallback), SDDM
 make theming    # pywal
 make editors    # VS Code, Zed, JetBrains Toolbox
 make containers # Podman, podman-compose, podman-docker, podman-tui
+make ssh        # OpenSSH Server, key-only auth
 make shared     # Shared Configs (Git)
 ```
 
@@ -215,6 +217,22 @@ Aktiviert zusätzlich den rootless Podman-API-Socket (`systemctl --user enable -
 
 ---
 
+### `make ssh` — SSH Server
+
+- Installiert `openssh-server` (idempotent, falls noch nicht vorhanden)
+- Generiert ein eigenes ed25519-Keypair unter `~/.ssh/id_ed25519_workstation` — ein bereits vorhandener Key wird **nie** überschrieben oder neu generiert
+- Trägt den Public Key in `~/.ssh/authorized_keys` ein
+- Härtet `sshd` über eine Drop-in-Datei (`/etc/ssh/sshd_config.d/99-key-only.conf`): **Passwort-Login ist deaktiviert**, nur Key-basierte Authentifizierung ist erlaubt
+- Aktiviert und startet den `sshd`-Service, öffnet den `ssh`-Service in `firewalld` (dort meist schon standardmäßig erlaubt)
+
+> Der generierte Private Key verlässt die Maschine **nicht automatisch** und ist nicht Teil des Repos. Um dich von einem anderen Rechner aus einzuloggen, den Private Key manuell dorthin kopieren, z. B.:
+> ```bash
+> scp ~/.ssh/id_ed25519_workstation <client>:~/.ssh/
+> ssh -i ~/.ssh/id_ed25519_workstation <user>@<ip>
+> ```
+
+---
+
 ### `make shared` — Shared Configs
 
 Symlinkt plattformübergreifende Konfigurationen:
@@ -316,6 +334,7 @@ fedora-42-general/
 │   ├── theming.sh             # pywal
 │   ├── editors.sh              # VS Code, Zed, JetBrains
 │   ├── containers.sh            # Podman, podman-compose, podman-docker, podman-tui
+│   ├── ssh.sh                     # OpenSSH Server, key-only auth
 │   ├── shared.sh                # Shared Configs
 │   ├── wallpaper.sh              # Setzt nur das Wallpaper-Bild (swaybg)
 │   └── apply-theme.sh             # Wendet ein pywal-Farbschema an + Reload-Kette
