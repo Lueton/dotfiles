@@ -8,7 +8,7 @@
 
     "sway/workspaces": {
         "disable-scroll": true,
-        "all-outputs": true
+        "all-outputs": false
     },
     "sway/window": {
         "max-length": 60
