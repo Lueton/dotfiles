@@ -127,6 +127,16 @@ input "type:keyboard" {
     xkb_variant "nodeadkeys"
 }
 
+# ── Outputs ──────────────────────────────────────────────
+output DP-1 {
+    resolution 2560x1440
+    position 0,0
+}
+output HDMI-A-3 {
+    resolution 1920x1080
+    position 2560,360
+}
+
 # ── Appearance ───────────────────────────────────────────
 gaps inner 12
 gaps outer 6
