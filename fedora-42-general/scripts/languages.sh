@@ -44,6 +44,7 @@ fi
 JAVA_17="17.0.19-tem"
 JAVA_21="21.0.11-tem"
 JAVA_DEFAULT="$JAVA_21"
+MAVEN_VERSION="3.9.16"
 
 if [ ! -d "$HOME/.sdkman" ]; then
     log_info "☕  Installing sdkman..."
@@ -54,8 +55,9 @@ if [ ! -d "$HOME/.sdkman" ]; then
     sdk install java "$JAVA_17"
     sdk install java "$JAVA_21"
     sdk default java "$JAVA_DEFAULT"
+    sdk install maven "$MAVEN_VERSION"
     set -u
-    log_success "Java $JAVA_17 and $JAVA_21 installed (default: $JAVA_DEFAULT)"
+    log_success "Java $JAVA_17 and $JAVA_21 installed (default: $JAVA_DEFAULT), Maven $MAVEN_VERSION installed"
 fi
 
 log_success "Language runtimes setup complete"

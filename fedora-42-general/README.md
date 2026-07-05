@@ -22,6 +22,7 @@ Automatisiertes Setup für eine vollständige Fedora Entwicklungsumgebung mit Sw
 | Node.js | [nvm](https://github.com/nvm-sh/nvm) |
 | Python | [pyenv](https://github.com/pyenv/pyenv) |
 | Java | [sdkman](https://sdkman.io/) |
+| Build Tool | Maven (via sdkman) |
 
 Reine Wayland-Session — kein X11 (kein Xorg, kein XWayland-Tooling in den Scripts).
 
@@ -66,7 +67,7 @@ Oder einzelne Komponenten:
 ```bash
 make packages   # System-Pakete via dnf, RPM Fusion, Flathub, Intel VA-API
 make fonts      # Nerd Fonts
-make languages  # Node.js, Python, Java
+make languages  # Node.js, Python, Java, Maven
 make shell      # Zsh, Oh My Zsh, Starship
 make terminal   # Kitty
 make wm         # Sway, Waybar, Wofi, Mako, KDE Plasma (Fallback), SDDM
@@ -119,6 +120,7 @@ Version: `3.2.1` von [ryanoasis/nerd-fonts](https://github.com/ryanoasis/nerd-fo
 | Python | 3.12.3 | pyenv |
 | Java | 17.0.12-tem (alt) | sdkman |
 | Java | 21.0.4-tem **(default)** | sdkman |
+| Maven | 3.9.16 | sdkman |
 
 ---
 
@@ -307,7 +309,7 @@ fedora-42-general/
 │   ├── utils.sh            # Farben, Logging-Funktionen, Hilfsfunktionen
 │   ├── packages.sh         # dnf + RPM Fusion + Flathub + intel-media-driver-freeworld
 │   ├── fonts.sh             # Nerd Fonts
-│   ├── languages.sh         # nvm, pyenv, sdkman
+│   ├── languages.sh         # nvm, pyenv, sdkman (Java, Maven)
 │   ├── shell.sh              # Zsh, Oh My Zsh, Starship
 │   ├── terminal.sh           # Kitty
 │   ├── wm.sh                 # Sway, Waybar, Wofi, Mako, KDE Plasma, SDDM
