@@ -15,6 +15,7 @@ window#waybar {
 /* ---------- shared pill treatment ---------- */
 #left,
 #clock,
+#custom-date,
 #system,
 #info,
 #media,
@@ -92,6 +93,12 @@ window#waybar {
 
 #mpris.paused  { color: @color5; }
 #mpris.playing { color: @color4; font-weight: bold; }
+
+/* ---------- right cluster 4: date ---------- */
+#custom-date {
+    padding: 0 14px;
+    color: @color15;
+}
 
 /* ---------- tray ---------- */
 #tray {
