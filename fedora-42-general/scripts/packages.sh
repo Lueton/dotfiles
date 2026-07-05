@@ -58,6 +58,8 @@ PACKAGES=(
     lxappearance papirus-icon-theme
     # Media (RPM Fusion free)
     mpv
+    # Browser
+    firefox
 )
 
 sudo dnf install -y "${PACKAGES[@]}"
@@ -69,5 +71,22 @@ if ! rpm -q intel-media-driver &>/dev/null; then
 else
     log_info "intel-media-driver already installed, skipping"
 fi
+
+log_info "Configuring Firefox default homepage and search engine..."
+sudo mkdir -p /etc/firefox/policies
+sudo tee /etc/firefox/policies/policies.json > /dev/null <<'EOF'
+{
+  "policies": {
+    "Homepage": {
+      "URL": "https://www.google.com",
+      "StartPage": "homepage"
+    },
+    "SearchEngines": {
+      "Default": "Google"
+    }
+  }
+}
+EOF
+log_success "Firefox policies configured"
 
 log_success "Core packages installed"
