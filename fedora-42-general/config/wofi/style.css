@@ -11,7 +11,7 @@
 
 window {
     font-size: 14px;
-    font-family: "JetBrains Mono";
+    font-family: "JetBrainsMono Nerd Font";
     background-color: @background;
     color: @foreground;
     border: 2px solid @color4;
@@ -45,8 +45,29 @@ window {
     border-radius: 8px;
 }
 
+#img {
+    margin-right: 8px;
+}
+
 #entry:selected {
     background-color: @color4;
     color: @color15;
-    border-radius: 4px;
+}
+
+#text {
+    font-weight: bold;
+}
+
+#scroll scrollbar,
+#scroll scrollbar slider,
+#scroll scrollbar trough,
+#scroll scrollbar.dragging slider,
+#scroll scrollbar.hovering slider,
+#scroll scrollbar:hover slider,
+#scroll scrollbar:hover trough slider {
+    min-width: 3px;
+    border: none;
+    margin: 0;
+    border-radius: 3px;
+    background-color: @color5;
 }
