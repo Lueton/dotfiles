@@ -139,8 +139,8 @@ output HDMI-A-3 {
 }
 
 # ── Appearance ───────────────────────────────────────────
-gaps inner 12
-gaps outer 6
+gaps inner 0
+gaps outer 0
 smart_gaps  off
 smart_borders on
 
@@ -151,8 +151,8 @@ hide_edge_borders       smart
 # Window colors — variables set by colors.sway include
 #                        border      background  text        indicator   child_border
 client.focused           $color4     $color4     $foreground $color4     $color4
-client.focused_inactive  $color0     $color0     $color7     $color8     $color0
-client.unfocused         $color0     $background $color5     $color8     $color0
+client.focused_inactive  $background $color0     $color7     $color8     $background
+client.unfocused         $background $background $color5     $color8     $background
 client.urgent            $color1     $color1     $foreground $color1     $color1
 client.placeholder       $color0     $background $foreground $background $color0
 
