@@ -115,8 +115,9 @@
     "network": {
         "interval": 3,
         "format-wifi": "󰤨 {essid}",
-        "format-ethernet": "󰈀 {ipaddr}",
+        "format-ethernet": "󰈀 Connected",
         "format-disconnected": "󰤭 offline",
+        "tooltip-format-ethernet": "{ifname}: {ipaddr}/{cidr}",
         "on-click": "nm-connection-editor"
     },
     "pulseaudio": {
@@ -132,14 +133,17 @@
         "on-click": "pavucontrol"
     },
     "mpris": {
-        "format": "{status_icon} {dynamic}",
+        "format": "{status_icon} 󰎇 {dynamic}",
         "format-stopped": "󰝛",
         "status-icons": {
             "playing": "",
             "paused": ""
         },
-        "dynamic-len": 30,
-        "tooltip-format": "{player} — {dynamic}"
+        "dynamic-order": ["title", "artist"],
+        "title-len": 15,
+        "artist-len": 15,
+        "dynamic-len": 20,
+        "tooltip-format": "{player} — {artist} - {title}"
     },
     "tray": {
         "spacing": 8

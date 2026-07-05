@@ -86,6 +86,7 @@ window#waybar {
 }
 
 #network    { color: @color15; }
+#network.ethernet { color: @color2; }
 #pulseaudio { color: @color15; }
 #mpris      { color: @color15; }
 
