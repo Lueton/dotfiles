@@ -1,0 +1,7 @@
+# Symlinks (build/deployment artifacts)
+**/config/kitty/kitty
+**/config/pywal/templates/templates
+**/config/sway/sway
+**/config/wofi/wofi
+**/wallpapers/current
+**/wallpapers/wallpapers
