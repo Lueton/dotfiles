@@ -15,6 +15,7 @@ bindsym $mod+Return       exec $term
 bindsym $mod+d            exec pgrep -x wofi > /dev/null || $menu
 bindsym $mod+Shift+b      exec firefox
 bindsym $mod+Shift+n      exec nemo
+bindsym $mod+question     exec sway-keybinds
 
 # Kill focused window
 bindsym $mod+Shift+q kill
