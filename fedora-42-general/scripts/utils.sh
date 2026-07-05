@@ -49,6 +49,6 @@ symlink() {
         mv "$dest" "${dest}.bak"
         log_warn "Backed up $(basename "$dest") → ${dest}.bak"
     fi
-    ln -sf "$src" "$dest"
+    ln -sfn "$src" "$dest"
     log_success "Linked $(basename "$src")"
 }
