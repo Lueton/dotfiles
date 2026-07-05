@@ -35,6 +35,7 @@ fi
 mkdir -p "$HOME/.config/waybar"
 symlink "$DOTFILES_DIR/config/waybar/config.jsonc" "$HOME/.config/waybar/config.jsonc"
 symlink "$DOTFILES_DIR/config/waybar/style.css"    "$HOME/.config/waybar/style.css"
+symlink "$DOTFILES_DIR/config/waybar/scripts"      "$HOME/.config/waybar/scripts"
 ln -sf "$HOME/.cache/wal/colors-waybar.css" "$HOME/.config/waybar/colors-waybar.css"
 
 # Wofi has no generated files inside its config dir either: style.css imports colors

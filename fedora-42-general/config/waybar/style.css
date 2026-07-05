@@ -3,6 +3,7 @@
 * {
     font-family: "JetBrainsMono Nerd Font";
     font-size: 13px;
+    font-weight: bold;
     min-height: 0;
 }
 
@@ -11,37 +12,86 @@ window#waybar {
     color: @foreground;
 }
 
+/* ---------- shared pill treatment ---------- */
+#left,
+#clock,
+#system,
+#info,
+#media,
+#tray {
+    background-color: @color0;
+    border-radius: 12px;
+    margin: 5px 4px;
+}
+
+/* ---------- left cluster: workspaces + window ---------- */
 #workspaces button {
     padding: 0 8px;
     background-color: transparent;
-    color: @color5;
+    color: @color15;
 }
 
 #workspaces button.focused {
     background-color: @color4;
     color: @color15;
+    border-radius: 10px;
 }
 
 #workspaces button.urgent {
     background-color: @color1;
     color: @foreground;
+    border-radius: 10px;
 }
 
-#window,
-#clock,
-#cpu,
-#memory,
-#network,
-#pulseaudio,
+#window {
+    padding: 0 12px 0 4px;
+}
+
+/* ---------- center cluster: clock ---------- */
+#clock {
+    padding: 0 14px;
+}
+
+/* ---------- right cluster 1: system stats ---------- */
+#cpu, #memory, #temperature, #disk {
+    padding: 0 8px;
+}
+
+#cpu         { color: @color15; }
+#memory      { color: @color15; }
+#temperature { color: @color15; }
+#disk        { color: @color15; }
+
+#temperature.warning  { color: @color3; }
+#temperature.critical { color: @color1; font-weight: bold; }
+#disk.warning          { color: @color3; }
+#disk.critical         { color: @color1; font-weight: bold; }
+
+/* ---------- right cluster 2: ambient info ---------- */
+#custom-weather, #custom-updates {
+    padding: 0 8px;
+    color: @color15;
+}
+
+#custom-updates.pending { color: @color3; font-weight: bold; }
+#custom-updates.idle    { color: @color15; }
+#custom-weather.warning  { color: @color3; }
+#custom-weather.critical { color: @color1; font-weight: bold; }
+#custom-weather.error   { color: @color5; font-style: italic; }
+
+/* ---------- right cluster 3: connectivity + media ---------- */
+#network, #pulseaudio, #mpris {
+    padding: 0 8px;
+}
+
+#network    { color: @color15; }
+#pulseaudio { color: @color15; }
+#mpris      { color: @color15; }
+
+#mpris.paused  { color: @color5; }
+#mpris.playing { color: @color4; font-weight: bold; }
+
+/* ---------- tray ---------- */
 #tray {
     padding: 0 10px;
-}
-
-#cpu        { color: @color2; }
-#memory     { color: @color4; }
-#network    { color: @color6; }
-#pulseaudio { color: @color3; }
-
-#clock, #workspaces, #window {
-font-weight: bold;
 }
