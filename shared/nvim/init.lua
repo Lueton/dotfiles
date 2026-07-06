@@ -54,5 +54,24 @@ require("lazy").setup({
       event = "VeryLazy",
       opts = {},
     },
+    {
+      "nvim-treesitter/nvim-treesitter",
+      branch = "main", -- the old "master" API (ensure_installed in setup{}) is retired; "main" is now the only supported branch
+      build = ":TSUpdate", -- keeps installed parsers up to date whenever the plugin itself updates
+      config = function()
+        -- Explicit list of languages we want parsers for (no auto_install)
+        local parsers = { "javascript" }
+
+        require("nvim-treesitter").install(parsers)
+
+        -- Highlighting is provided by Neovim core, but must be turned on per filetype
+        vim.api.nvim_create_autocmd("FileType", {
+          pattern = parsers,
+          callback = function()
+            vim.treesitter.start()
+          end,
+        })
+      end,
+    },
   },
 })
