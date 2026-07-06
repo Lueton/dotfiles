@@ -159,5 +159,16 @@ require("lazy").setup({
         },
       },
     },
+    {
+      "saghen/blink.cmp",
+      version = "1.*", -- pin to the stable release line; v2 is still under active, breaking development
+      dependencies = { "rafamadriz/friendly-snippets" }, -- ready-made snippets for the "snippets" source
+      opts = {
+        keymap = { preset = "super-tab" }, -- Tab accepts/navigates down, S-Tab navigates up, C-space opens/shows docs
+        sources = {
+          default = { "lsp", "path", "snippets", "buffer" },
+        },
+      },
+    },
   },
 })
