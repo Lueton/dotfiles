@@ -160,6 +160,16 @@ require("lazy").setup({
       },
     },
     {
+      "nvim-lualine/lualine.nvim",
+      event = "VeryLazy", -- only cosmetic, no need to block startup on it
+      dependencies = { "nvim-tree/nvim-web-devicons" }, -- file-type icons in the statusline
+      opts = {
+        options = {
+          theme = "catppuccin-mocha", -- matches the "mocha" flavour set above; plain "catppuccin" isn't a valid theme name
+        },
+      },
+    },
+    {
       "windwp/nvim-autopairs",
       event = "InsertEnter", -- only needed once you start typing, no reason to load it at startup
       opts = {},
