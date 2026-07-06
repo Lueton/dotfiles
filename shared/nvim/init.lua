@@ -102,6 +102,11 @@ require("lazy").setup({
       end,
     },
     {
+      "lewis6991/gitsigns.nvim",
+      event = { "BufReadPre", "BufNewFile" },
+      opts = {},
+    },
+    {
       "mason-org/mason-lspconfig.nvim",
       opts = {
         -- "ts_ls" is nvim-lspconfig's name for typescript-language-server (handles JS and TS)
