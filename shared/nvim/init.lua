@@ -118,8 +118,30 @@ require("lazy").setup({
       "WhoIsSethDaniel/mason-tool-installer.nvim",
       dependencies = { "mason-org/mason.nvim" },
       opts = {
-        ensure_installed = { "prettier" },
+        ensure_installed = { "prettier", "eslint_d" },
       },
+    },
+    {
+      "mfussenegger/nvim-lint",
+      event = { "BufReadPost", "BufWritePost", "InsertLeave" }, -- (re-)lint on open, after save, and after leaving insert mode
+      config = function()
+        local lint = require("lint")
+        lint.linters_by_ft = {
+          javascript = { "eslint_d" },
+        }
+        vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost", "InsertLeave" }, {
+          callback = function()
+            lint.try_lint()
+          end,
+        })
+
+        -- the event above that triggered this plugin to load has already passed by
+        -- the time this autocmd gets registered, so lint once immediately here too;
+        -- deferred a tick because filetype detection may not be finished yet at this point
+        vim.schedule(function()
+          lint.try_lint()
+        end)
+      end,
     },
     {
       "stevearc/conform.nvim",
