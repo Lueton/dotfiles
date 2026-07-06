@@ -149,10 +149,12 @@ require("lazy").setup({
       cmd = { "ConformInfo" },
       opts = {
         formatters_by_ft = {
-          javascript = { "prettier" },
+          -- run in order: eslint_d fixes safely-fixable lint issues first,
+          -- then prettier has the final say on whitespace/style
+          javascript = { "eslint_d", "prettier" },
         },
         format_on_save = {
-          timeout_ms = 500,
+          timeout_ms = 2000, -- eslint_d + prettier run sequentially now, so give the pair more headroom
           lsp_format = "fallback", -- if no formatter matched above, fall back to the LSP server's own formatting
         },
       },
