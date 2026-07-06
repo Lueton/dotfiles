@@ -38,6 +38,18 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   spec = {
     {
+      "catppuccin/nvim",
+      name = "catppuccin",
+      priority = 1000, -- load before other plugins so colors are ready when they render
+      opts = {
+        flavour = "mocha", -- dark variant; other options: latte, frappe, macchiato
+      },
+      config = function(_, opts)
+        require("catppuccin").setup(opts)
+        vim.cmd.colorscheme("catppuccin")
+      end,
+    },
+    {
       "folke/which-key.nvim",
       event = "VeryLazy",
       opts = {},
