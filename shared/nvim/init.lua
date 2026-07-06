@@ -105,6 +105,20 @@ require("lazy").setup({
       },
     },
     {
+      "MagicDuck/grug-far.nvim",
+      cmd = "GrugFar", -- only needed once you actually invoke it
+      keys = {
+        { "<leader>sr", "<cmd>GrugFar<cr>", desc = "Search and Replace (project-wide)" },
+      },
+      opts = {
+        keymaps = {
+          -- default is <localleader>c, i.e. plain "\c" since we never set maplocalleader;
+          -- "q" matches the usual close convention for this kind of result window
+          close = { n = "q" },
+        },
+      },
+    },
+    {
       "nvim-treesitter/nvim-treesitter",
       branch = "main", -- the old "master" API (ensure_installed in setup{}) is retired; "main" is now the only supported branch
       build = ":TSUpdate", -- keeps installed parsers up to date whenever the plugin itself updates
