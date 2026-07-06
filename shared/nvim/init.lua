@@ -112,5 +112,28 @@ require("lazy").setup({
         "neovim/nvim-lspconfig", -- provides the server connection configs mason-lspconfig enables
       },
     },
+    {
+      -- installs non-LSP tools (formatters, linters) through Mason, the same way
+      -- mason-lspconfig does it for LSP servers above
+      "WhoIsSethDaniel/mason-tool-installer.nvim",
+      dependencies = { "mason-org/mason.nvim" },
+      opts = {
+        ensure_installed = { "prettier" },
+      },
+    },
+    {
+      "stevearc/conform.nvim",
+      event = { "BufWritePre" }, -- load just in time to format before a save completes
+      cmd = { "ConformInfo" },
+      opts = {
+        formatters_by_ft = {
+          javascript = { "prettier" },
+        },
+        format_on_save = {
+          timeout_ms = 500,
+          lsp_format = "fallback", -- if no formatter matched above, fall back to the LSP server's own formatting
+        },
+      },
+    },
   },
 })
