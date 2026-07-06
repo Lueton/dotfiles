@@ -55,6 +55,27 @@ require("lazy").setup({
       opts = {},
     },
     {
+      "nvim-telescope/telescope.nvim",
+      branch = "0.1.x", -- pinned stable release branch, not the unstable main branch
+      dependencies = { "nvim-lua/plenary.nvim" }, -- utility library telescope is built on
+      keys = {
+        { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
+        { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live Grep" },
+        { "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Find Buffers" },
+        { "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "Help Tags" },
+      },
+      opts = {
+        defaults = {
+          preview = {
+            -- telescope's previewer still calls nvim-treesitter's old ft_to_lang() API,
+            -- which no longer exists on nvim-treesitter's "main" branch; fall back to
+            -- plain regex-based syntax highlighting in the preview pane instead
+            treesitter = false,
+          },
+        },
+      },
+    },
+    {
       "nvim-treesitter/nvim-treesitter",
       branch = "main", -- the old "master" API (ensure_installed in setup{}) is retired; "main" is now the only supported branch
       build = ":TSUpdate", -- keeps installed parsers up to date whenever the plugin itself updates
