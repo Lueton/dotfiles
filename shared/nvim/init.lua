@@ -160,6 +160,11 @@ require("lazy").setup({
       },
     },
     {
+      "windwp/nvim-autopairs",
+      event = "InsertEnter", -- only needed once you start typing, no reason to load it at startup
+      opts = {},
+    },
+    {
       "saghen/blink.cmp",
       version = "1.*", -- pin to the stable release line; v2 is still under active, breaking development
       dependencies = { "rafamadriz/friendly-snippets" }, -- ready-made snippets for the "snippets" source
