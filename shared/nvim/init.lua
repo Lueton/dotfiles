@@ -22,6 +22,13 @@ opt.splitbelow = true
 opt.undofile = true -- persist undo history across sessions
 opt.termguicolors = true -- required for accurate colorschemes/plugin themes
 
+vim.diagnostic.config({
+  virtual_text = { source = true }, -- show messages inline, always prefixed with the source name
+  float = { source = true }, -- same rule for the <leader>e floating window
+})
+
+vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic" })
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
