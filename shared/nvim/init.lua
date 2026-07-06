@@ -62,6 +62,28 @@ require("lazy").setup({
       opts = {},
     },
     {
+      "nvim-neo-tree/neo-tree.nvim",
+      branch = "v3.x", -- pinned stable release branch
+      dependencies = {
+        "nvim-lua/plenary.nvim",
+        "nvim-tree/nvim-web-devicons",
+        "MunifTanjim/nui.nvim", -- UI building blocks neo-tree renders itself with
+      },
+      keys = {
+        { "<leader>fe", "<cmd>Neotree toggle<cr>", desc = "Toggle File Explorer" },
+        { "<leader>fo", "<cmd>Neotree focus<cr>", desc = "Focus File Explorer" },
+      },
+      opts = {
+        close_if_last_window = true, -- closing the last real file window also closes Neo-tree, instead of leaving it orphaned
+        filesystem = {
+          filtered_items = {
+            hide_dotfiles = false, -- show dotfiles (e.g. .prettierrc) instead of counting them as "hidden"
+            hide_gitignored = false, -- show git-ignored files too
+          },
+        },
+      },
+    },
+    {
       "nvim-telescope/telescope.nvim",
       branch = "0.1.x", -- pinned stable release branch, not the unstable main branch
       dependencies = { "nvim-lua/plenary.nvim" }, -- utility library telescope is built on
