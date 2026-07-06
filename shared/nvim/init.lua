@@ -94,5 +94,16 @@ require("lazy").setup({
         })
       end,
     },
+    {
+      "mason-org/mason-lspconfig.nvim",
+      opts = {
+        -- "ts_ls" is nvim-lspconfig's name for typescript-language-server (handles JS and TS)
+        ensure_installed = { "ts_ls" },
+      },
+      dependencies = {
+        { "mason-org/mason.nvim", opts = {} }, -- the underlying installer/package manager
+        "neovim/nvim-lspconfig", -- provides the server connection configs mason-lspconfig enables
+      },
+    },
   },
 })
