@@ -21,9 +21,10 @@ fi
 mkdir -p "$HOME/.config/wal"
 symlink "$DOTFILES_DIR/config/pywal/templates" "$HOME/.config/wal/templates"
 
-# Static color theme (fixed palette, independent of the wallpaper image)
-symlink "$DOTFILES_DIR/config/pywal/colorschemes/tailwind-dark.json" \
-    "$HOME/.config/wal/colorschemes/dark/tailwind-dark.json"
+# Static color themes (fixed palette, independent of the wallpaper image)
+for scheme in "$DOTFILES_DIR"/config/pywal/colorschemes/*.json; do
+    symlink "$scheme" "$HOME/.config/wal/colorschemes/dark/$(basename "$scheme")"
+done
 
 # Wallpapers directory
 symlink "$DOTFILES_DIR/wallpapers" "$HOME/wallpapers"
