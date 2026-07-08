@@ -191,6 +191,7 @@ config/wofi/    → ~/.config/wofi/
 - Installiert die Hilfsskripte `wallpaper` und `apply-theme` nach `~/.local/bin/`
 - Wendet das `tailwind-dark`-Farbschema sofort an (`apply-theme tailwind-dark`) — unabhängig davon, ob bereits ein Wallpaper-Bild gesetzt ist
 - Setzt das Standard-Wallpaper-Bild (`lunar-tides.jpg`), falls vorhanden
+- Installiert **sunwait** und richtet automatisches Hell/Dunkel-Umschalten für Firefox/GTK-Apps ein (siehe [Automatisches Hell/Dunkel-Umschalten](#automatisches-helldunkel-umschalten) unten)
 
 KDE Plasma bekommt **kein** Theming durch dieses Setup — die Fallback-Session behält, was du dort manuell einstellst.
 
@@ -317,6 +318,33 @@ Ein eigenes Farbschema erstellen: JSON-Datei nach dem Schema in `config/pywal/co
 
 ---
 
+## Automatisches Hell/Dunkel-Umschalten
+
+Sway ist (anders als GNOME/KDE) kein volles Desktop-Environment und hat daher keine eingebaute Zeitplan-Funktion für Hell/Dunkel — Firefox' "Automatisch ans System anpassen" folgt aber trotzdem `org.gnome.desktop.interface color-scheme`, sofern `xdg-desktop-portal-gtk` läuft (bereits über die KDE-Plasma-Fallback-Session als Abhängigkeit vorhanden). `make theming` richtet dafür `sunwait` + einen systemd-User-Timer ein, der alle 15 Minuten prüft, ob gerade Tag oder Nacht ist, und `color-scheme` nur bei tatsächlicher Änderung umschaltet (`gsettings`):
+
+```
+sunset-theme.timer (alle 15 Min, + 1 Min nach Boot)
+    └─▶ sunset-theme
+            ├─▶ sunwait -p <lat> <lon>                 # Text-Report mit Sonnenauf-/-untergang
+            ├─▶ "Sun rises HHMM, sets HHMM" extrahieren, mit aktueller Uhrzeit vergleichen
+            └─▶ gsettings set org.gnome.desktop.interface color-scheme prefer-light|prefer-dark
+```
+
+Das Fedora-Paket `sunwait` ist die alte Version von 2004 (nicht der neuere, community-geforkte `poll`-Modus) — es liefert keinen fertigen Tag/Nacht-Exit-Code, sondern nur einen Text-Report per `-p`, aus dem `sunset-theme.sh` die Uhrzeiten für Sonnenauf- und -untergang herauspars't und selbst mit der aktuellen Uhrzeit vergleicht. Außerdem kennt diese Version für Längengrade nur den Suffix `W` — östliche Längen (wie Berlin) müssen deshalb als *negativer* W-Wert angegeben werden (`-13.4132W` statt `13.4132E`).
+
+Betroffen sind nur Firefox und andere GTK/Portal-Apps mit "Automatisch" — Sway, Waybar, Mako, Kitty und das pywal-Farbschema bleiben unverändert, da es noch kein helles pywal-Schema gibt. `sunset-theme.sh` enthält dazu einen Kommentar mit der Idee, das später per `apply-theme` zu ergänzen.
+
+> **Koordinaten:** Da dieses Repo öffentlich auf GitHub liegt, sind in `sunset-theme.sh` bewusst grobe Koordinaten (Berlin Alexanderplatz) statt der exakten Heimadresse hinterlegt — für Sonnenauf-/-untergang genau genug, ohne den eigenen Standort preiszugeben. Bei Bedarf einfach `LAT`/`LON` im Skript anpassen (Achtung Vorzeichen-Eigenheit oben).
+
+`sunset-theme` manuell ausführen oder Timer-Status prüfen:
+
+```bash
+sunset-theme
+systemctl --user list-timers sunset-theme.timer
+```
+
+---
+
 ## Verzeichnisstruktur
 
 ```
@@ -337,7 +365,8 @@ fedora-42-general/
 │   ├── ssh.sh                     # OpenSSH Server, key-only auth
 │   ├── shared.sh                # Shared Configs
 │   ├── wallpaper.sh              # Setzt nur das Wallpaper-Bild (swaybg)
-│   └── apply-theme.sh             # Wendet ein pywal-Farbschema an + Reload-Kette
+│   ├── apply-theme.sh             # Wendet ein pywal-Farbschema an + Reload-Kette
+│   └── sunset-theme.sh             # Schaltet GTK color-scheme nach Sonnenstand um (sunwait)
 └── config/
     ├── sway/                # Sway Konfiguration
     ├── waybar/               # Waybar Konfiguration + Style
@@ -346,6 +375,8 @@ fedora-42-general/
     ├── mako/                     # Mako Fallback-Config
     ├── zsh/                        # .zshrc, .zprofile
     ├── starship/                    # starship.toml
+    ├── systemd/
+    │   └── user/                      # sunset-theme.service + .timer
     └── pywal/
         ├── templates/                # pywal Templates (colors.sway, colors-waybar.css, colors-wofi.css, mako)
         └── colorschemes/               # Statische Farbschemata (tailwind-dark.json)

@@ -1,0 +1,6 @@
+[Unit]
+Description=Sonnenstand prüfen und GTK color-scheme (Firefox etc.) umschalten
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/sunset-theme

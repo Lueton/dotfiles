@@ -50,4 +50,23 @@ else
     log_info "  wallpaper ~/wallpapers/your-image.jpg"
 fi
 
+# sunwait: Sonnenauf-/-untergangsberechnung für automatisches Hell/Dunkel-Umschalten
+if ! is_installed sunwait; then
+    log_info "Installing sunwait..."
+    sudo dnf install -y sunwait
+fi
+
+symlink "$DOTFILES_DIR/scripts/sunset-theme.sh" "$HOME/.local/bin/sunset-theme"
+chmod +x "$DOTFILES_DIR/scripts/sunset-theme.sh"
+
+mkdir -p "$HOME/.config/systemd/user"
+symlink "$DOTFILES_DIR/config/systemd/user/sunset-theme.service" "$HOME/.config/systemd/user/sunset-theme.service"
+symlink "$DOTFILES_DIR/config/systemd/user/sunset-theme.timer" "$HOME/.config/systemd/user/sunset-theme.timer"
+systemctl --user daemon-reload
+systemctl --user enable --now sunset-theme.timer
+
+log_info "Setting initial color-scheme based on current sun position..."
+"$HOME/.local/bin/sunset-theme"
+log_success "Sunset theme switching enabled"
+
 log_success "Theming setup complete"
