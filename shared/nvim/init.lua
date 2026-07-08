@@ -124,7 +124,7 @@ require("lazy").setup({
       build = ":TSUpdate", -- keeps installed parsers up to date whenever the plugin itself updates
       config = function()
         -- Explicit list of languages we want parsers for (no auto_install)
-        local parsers = { "javascript" }
+        local parsers = { "javascript", "java", "yaml", "xml" }
 
         require("nvim-treesitter").install(parsers)
 
@@ -135,6 +135,37 @@ require("lazy").setup({
             vim.treesitter.start()
           end,
         })
+      end,
+    },
+    {
+      "mfussenegger/nvim-dap",
+      keys = {
+        { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
+        { "<leader>dc", function() require("dap").continue() end, desc = "Continue / Start Debugging" },
+        { "<leader>di", function() require("dap").step_into() end, desc = "Step Into" },
+        { "<leader>do", function() require("dap").step_over() end, desc = "Step Over" },
+        { "<leader>dO", function() require("dap").step_out() end, desc = "Step Out" },
+      },
+    },
+    {
+      "rcarriga/nvim-dap-ui",
+      dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
+      keys = {
+        { "<leader>du", function() require("dapui").toggle() end, desc = "Toggle Debug UI" },
+      },
+      config = function()
+        local dap, dapui = require("dap"), require("dapui")
+        dapui.setup()
+        -- auto-open/close the debug UI windows around a debug session
+        dap.listeners.after.event_initialized["dapui_config"] = function()
+          dapui.open()
+        end
+        dap.listeners.before.event_terminated["dapui_config"] = function()
+          dapui.close()
+        end
+        dap.listeners.before.event_exited["dapui_config"] = function()
+          dapui.close()
+        end
       end,
     },
     {
@@ -154,12 +185,91 @@ require("lazy").setup({
       },
     },
     {
+      -- Java's language server (jdtls) can't be driven through plain mason-lspconfig
+      -- like ts_ls above: it needs a per-project workspace dir (its own index cache)
+      -- and extra "bundle" jars for debugging/Spring Boot features, so it gets its
+      -- own dedicated plugin and a manual start_or_attach() call instead.
+      "mfussenegger/nvim-jdtls",
+      ft = "java", -- only load this plugin when a Java file is opened
+      config = function()
+        vim.api.nvim_create_autocmd("FileType", {
+          pattern = "java",
+          callback = function()
+            -- Walk up from the current file to find the project root (Maven/Gradle/git marker)
+            local root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" })
+            if not root_dir then
+              return
+            end
+
+            -- jdtls caches per-project index state in a workspace dir; give each
+            -- project its own folder so they don't clash with one another
+            local project_name = vim.fn.fnamemodify(root_dir, ":p:h:t")
+            local workspace_dir = vim.fn.stdpath("data") .. "/jdtls-workspace/" .. project_name
+
+            -- Collect extra jars Mason installed for debugging (java-debug-adapter,
+            -- java-test). jdtls loads these into its own JVM as "bundles" to gain
+            -- those features.
+            local mason_registry = require("mason-registry")
+            local bundles = {}
+            vim.list_extend(bundles, vim.split(vim.fn.glob(
+              mason_registry.get_package("java-debug-adapter"):get_install_path()
+                .. "/extension/server/com.microsoft.java.debug.plugin-*.jar"
+            ), "\n"))
+            vim.list_extend(bundles, vim.split(vim.fn.glob(
+              mason_registry.get_package("java-test"):get_install_path() .. "/extension/server/*.jar"
+            ), "\n"))
+            -- Spring Boot's own jdtls extension jars (bean navigation, endpoint
+            -- discovery, etc.) come from the spring-boot.nvim plugin below, which
+            -- already knows Mason's install path for vscode-spring-boot-tools
+            vim.list_extend(bundles, require("spring_boot").java_extensions())
+
+            require("jdtls").start_or_attach({
+              -- "jdtls" is the wrapper script Mason installed onto $PATH
+              cmd = { "jdtls", "-data", workspace_dir },
+              root_dir = root_dir,
+              init_options = {
+                bundles = bundles,
+                settings = {
+                  java = {
+                    configuration = {
+                      -- Tells jdtls about every JDK installed via SDKMAN so it can pick
+                      -- the one that actually matches each project's <java.version>/
+                      -- sourceCompatibility, instead of only ever using the JDK jdtls
+                      -- itself happens to be running on (which must be 21+ regardless
+                      -- of what any given project targets).
+                      runtimes = {
+                        { name = "JavaSE-17", path = vim.fn.expand("~/.sdkman/candidates/java/17.0.12-tem") },
+                        { name = "JavaSE-21", path = vim.fn.expand("~/.sdkman/candidates/java/21.0.4-tem"), default = true },
+                      },
+                    },
+                  },
+                },
+              },
+            })
+
+            -- Wires jdtls into nvim-dap so breakpoints/step-through work in Java
+            require("jdtls").setup_dap({ hotcodereplace = "auto" })
+          end,
+        })
+      end,
+    },
+    {
+      -- Runs the actual Spring Boot Language Server (a separate Java process from
+      -- jdtls) to get application.properties/yml completion, bean navigation, and
+      -- endpoint discovery. Talks to jdtls over custom LSP commands to share
+      -- classpath info, which is why it depends on nvim-jdtls above.
+      "JavaHello/spring-boot.nvim",
+      ft = { "java", "yaml", "jproperties" },
+      dependencies = { "mfussenegger/nvim-jdtls" },
+      opts = {},
+    },
+    {
       -- installs non-LSP tools (formatters, linters) through Mason, the same way
       -- mason-lspconfig does it for LSP servers above
       "WhoIsSethDaniel/mason-tool-installer.nvim",
       dependencies = { "mason-org/mason.nvim" },
       opts = {
-        ensure_installed = { "prettier", "eslint_d" },
+        ensure_installed = { "prettier", "eslint_d", "jdtls", "java-debug-adapter", "java-test", "vscode-spring-boot-tools" },
       },
     },
     {
