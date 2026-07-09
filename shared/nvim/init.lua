@@ -261,6 +261,17 @@ require("lazy").setup({
             require("jdtls").setup_dap({ hotcodereplace = "auto" })
           end,
         })
+
+        -- Auto-organize imports (add missing, drop unused, sort) before every
+        -- save. jdtls applies this as an async LSP edit rather than a
+        -- synchronous one, so very occasionally it lands a save late instead
+        -- of in the one that triggered it (see nvim-jdtls#235).
+        vim.api.nvim_create_autocmd("BufWritePre", {
+          pattern = "*.java",
+          callback = function()
+            require("jdtls").organize_imports()
+          end,
+        })
       end,
     },
     {
