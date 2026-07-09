@@ -290,7 +290,15 @@ require("lazy").setup({
       "WhoIsSethDaniel/mason-tool-installer.nvim",
       dependencies = { "mason-org/mason.nvim" },
       opts = {
-        ensure_installed = { "prettier", "eslint_d", "jdtls", "java-debug-adapter", "java-test", "vscode-spring-boot-tools" },
+        ensure_installed = {
+          "prettier",
+          "eslint_d",
+          "jdtls",
+          "java-debug-adapter",
+          "java-test",
+          "vscode-spring-boot-tools",
+          "google-java-format",
+        },
       },
     },
     {
@@ -324,6 +332,9 @@ require("lazy").setup({
           -- run in order: eslint_d fixes safely-fixable lint issues first,
           -- then prettier has the final say on whitespace/style
           javascript = { "eslint_d", "prettier" },
+          -- takes over from jdtls's built-in (Eclipse-style) formatter so
+          -- Java formatting is reproducible outside Neovim too (CI, IntelliJ)
+          java = { "google-java-format" },
         },
         format_on_save = {
           timeout_ms = 2000, -- eslint_d + prettier run sequentially now, so give the pair more headroom
