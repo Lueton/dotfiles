@@ -184,6 +184,24 @@ require("lazy").setup({
       opts = {},
     },
     {
+      -- Shows LSP progress ("Indexing...") and window/showMessage notifications
+      -- (e.g. spring-boot's "MCP server started" notice) as an auto-fading popup
+      -- instead of a permanent line in the command area. override_vim_notify
+      -- redirects vim.notify() itself, which is what window/showMessage uses.
+      "j-hui/fidget.nvim",
+      event = "LspAttach",
+      opts = {
+        notification = {
+          override_vim_notify = true,
+          window = {
+            winblend = 0, -- fidget defaults to 100 (fully transparent), which draws no
+                          -- background at all and lets the popup text collide with the
+                          -- buffer behind it; 0 makes the popup fully opaque instead.
+          },
+        },
+      },
+    },
+    {
       "mason-org/mason-lspconfig.nvim",
       opts = {
         -- "ts_ls" is nvim-lspconfig's name for typescript-language-server (handles JS and TS)
