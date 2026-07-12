@@ -161,7 +161,49 @@ require("lazy").setup({
       "mfussenegger/nvim-dap",
       keys = {
         { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint" },
-        { "<leader>dc", function() require("dap").continue() end, desc = "Continue / Start Debugging" },
+        {
+          "<leader>dc",
+          function()
+            local dap = require("dap")
+            -- Only build-before-run for a fresh Java launch (IntelliJ-style);
+            -- an active session means this is "continue past a breakpoint",
+            -- and non-Java buffers have no jdtls build step to run first.
+            if dap.session() or vim.bo.filetype ~= "java" then
+              dap.continue()
+              return
+            end
+            local client = vim.lsp.get_clients({ bufnr = 0, name = "jdtls" })[1]
+            if not client then
+              dap.continue()
+              return
+            end
+            vim.notify("Building project…", vim.log.levels.INFO)
+            -- "java/buildWorkspace" is jdtls's explicit compile command (same
+            -- one nvim-jdtls's own compile() wraps); `false` requests an
+            -- incremental build. Background compilation alone isn't reliably
+            -- reflected in the output classes dap launches from, so this is
+            -- run explicitly right before starting, not on every save.
+            client:request("java/buildWorkspace", false, function(err, result, ctx)
+              -- CompileWorkspaceStatus from jdtls: 0 FAILED, 1 SUCCEED, 2 WITHERROR, 3 CANCELLED
+              if not err and result == 1 then
+                vim.fn.setqflist({}, "r", { title = "jdtls build", items = {} })
+                dap.continue()
+                return
+              end
+              -- Build failed: surface the compile-error diagnostics jdtls just
+              -- published in the quickfix list (same "console" you'd check for
+              -- any other compiler error), so you see what broke instead of
+              -- just "it failed".
+              local errors = vim.tbl_filter(function(d)
+                return d.severity == vim.diagnostic.severity.ERROR
+              end, vim.diagnostic.get(nil, { namespace = vim.lsp.diagnostic.get_namespace(ctx.client_id) }))
+              vim.fn.setqflist({}, "r", { title = "jdtls build", items = vim.diagnostic.toqflist(errors) })
+              vim.cmd("copen")
+              vim.notify("Build failed, not starting debugger", vim.log.levels.ERROR)
+            end, 0)
+          end,
+          desc = "Build & Continue / Start Debugging",
+        },
         { "<leader>di", function() require("dap").step_into() end, desc = "Step Into" },
         { "<leader>do", function() require("dap").step_over() end, desc = "Step Over" },
         { "<leader>dO", function() require("dap").step_out() end, desc = "Step Out" },
