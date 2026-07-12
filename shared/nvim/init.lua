@@ -29,6 +29,8 @@ vim.diagnostic.config({
 
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic" })
 
+vim.keymap.set({ "n", "v" }, "<leader>w", "<cmd>w<cr>", { desc = "Save file" })
+
 -- gd/gD are otherwise just Vim's built-in, text-based jump within the current
 -- buffer; redirect them to real LSP navigation here.
 vim.api.nvim_create_autocmd("LspAttach", {
