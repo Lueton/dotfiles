@@ -216,6 +216,12 @@ require("lazy").setup({
       opts = {
         -- "ts_ls" is nvim-lspconfig's name for typescript-language-server (handles JS and TS)
         ensure_installed = { "ts_ls" },
+        -- jdtls gets its own dedicated setup below (via nvim-jdtls) with custom
+        -- JDK runtimes, debug bundles, and Spring Boot support. Without this
+        -- exclude, mason-lspconfig's automatic_enable would also auto-start
+        -- nvim-lspconfig's generic jdtls config, and the two would race to
+        -- attach to the same Java buffer with different workspace caches.
+        automatic_enable = { exclude = { "jdtls" } },
       },
       dependencies = {
         { "mason-org/mason.nvim", opts = {} }, -- the underlying installer/package manager
@@ -269,6 +275,17 @@ require("lazy").setup({
                 bundles = bundles,
                 settings = {
                   java = {
+                    -- Only used for "invisible" projects, i.e. plain folders without a
+                    -- pom.xml/build.gradle (real Maven/Gradle projects ignore this and
+                    -- use their own build file instead). Without it, jdtls tries to
+                    -- auto-detect the source root, which is unreliable with few files:
+                    -- it can register e.g. "src/app" instead of "src" as the source
+                    -- folder, causing false "declared package does not match expected
+                    -- package" errors.
+                    project = {
+                      sourcePaths = { "src" },
+                      outputPath = "bin",
+                    },
                     configuration = {
                       -- Tells jdtls about every JDK installed via SDKMAN so it can pick
                       -- the one that actually matches each project's <java.version>/
