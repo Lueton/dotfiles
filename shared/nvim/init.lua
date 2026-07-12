@@ -133,14 +133,22 @@ require("lazy").setup({
       branch = "main", -- the old "master" API (ensure_installed in setup{}) is retired; "main" is now the only supported branch
       build = ":TSUpdate", -- keeps installed parsers up to date whenever the plugin itself updates
       config = function()
-        -- Explicit list of languages we want parsers for (no auto_install)
-        local parsers = { "javascript", "java", "yaml", "xml" }
+        -- Explicit list of languages we want parsers for (no auto_install).
+        -- Parser names don't always match filetype names (e.g. the "tsx"
+        -- parser also covers the "typescriptreact" filetype), so filetypes
+        -- to activate highlighting for are listed separately below.
+        local parsers = { "javascript", "typescript", "tsx", "java", "yaml", "xml" }
 
         require("nvim-treesitter").install(parsers)
 
         -- Highlighting is provided by Neovim core, but must be turned on per filetype
+        local highlight_filetypes = {
+          "javascript", "javascriptreact",
+          "typescript", "typescriptreact",
+          "java", "yaml", "xml",
+        }
         vim.api.nvim_create_autocmd("FileType", {
-          pattern = parsers,
+          pattern = highlight_filetypes,
           callback = function()
             vim.treesitter.start()
           end,
@@ -326,6 +334,9 @@ require("lazy").setup({
         local lint = require("lint")
         lint.linters_by_ft = {
           javascript = { "eslint_d" },
+          javascriptreact = { "eslint_d" },
+          typescript = { "eslint_d" },
+          typescriptreact = { "eslint_d" },
         }
         vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost", "InsertLeave" }, {
           callback = function()
@@ -350,6 +361,9 @@ require("lazy").setup({
           -- run in order: eslint_d fixes safely-fixable lint issues first,
           -- then prettier has the final say on whitespace/style
           javascript = { "eslint_d", "prettier" },
+          javascriptreact = { "eslint_d", "prettier" },
+          typescript = { "eslint_d", "prettier" },
+          typescriptreact = { "eslint_d", "prettier" },
           -- takes over from jdtls's built-in (Eclipse-style) formatter so
           -- Java formatting is reproducible outside Neovim too (CI, IntelliJ)
           java = { "google-java-format" },
