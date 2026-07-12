@@ -139,7 +139,7 @@ require("lazy").setup({
         -- Parser names don't always match filetype names (e.g. the "tsx"
         -- parser also covers the "typescriptreact" filetype), so filetypes
         -- to activate highlighting for are listed separately below.
-        local parsers = { "javascript", "typescript", "tsx", "java", "yaml", "xml" }
+        local parsers = { "javascript", "typescript", "tsx", "java", "python", "yaml", "xml" }
 
         require("nvim-treesitter").install(parsers)
 
@@ -147,7 +147,7 @@ require("lazy").setup({
         local highlight_filetypes = {
           "javascript", "javascriptreact",
           "typescript", "typescriptreact",
-          "java", "yaml", "xml",
+          "java", "python", "yaml", "xml",
         }
         vim.api.nvim_create_autocmd("FileType", {
           pattern = highlight_filetypes,
@@ -189,6 +189,20 @@ require("lazy").setup({
       end,
     },
     {
+      -- registers Python debug configurations (via debugpy) into the already
+      -- generic nvim-dap/nvim-dap-ui setup above, the same way jdtls wires
+      -- itself into nvim-dap for Java
+      "mfussenegger/nvim-dap-python",
+      ft = "python",
+      dependencies = { "mfussenegger/nvim-dap" },
+      config = function()
+        -- Mason installs debugpy into its own isolated venv, not system Python
+        local mason_registry = require("mason-registry")
+        local debugpy_path = mason_registry.get_package("debugpy"):get_install_path() .. "/venv/bin/python"
+        require("dap-python").setup(debugpy_path)
+      end,
+    },
+    {
       "lewis6991/gitsigns.nvim",
       event = { "BufReadPre", "BufNewFile" },
       opts = {},
@@ -215,13 +229,19 @@ require("lazy").setup({
       "mason-org/mason-lspconfig.nvim",
       opts = {
         -- "ts_ls" is nvim-lspconfig's name for typescript-language-server (handles JS and TS)
-        ensure_installed = { "ts_ls" },
+        ensure_installed = { "ts_ls", "basedpyright" },
         -- jdtls gets its own dedicated setup below (via nvim-jdtls) with custom
         -- JDK runtimes, debug bundles, and Spring Boot support. Without this
         -- exclude, mason-lspconfig's automatic_enable would also auto-start
         -- nvim-lspconfig's generic jdtls config, and the two would race to
         -- attach to the same Java buffer with different workspace caches.
-        automatic_enable = { exclude = { "jdtls" } },
+        --
+        -- ruff is also excluded: mason-lspconfig auto-enables it as its own LSP
+        -- server (it recognizes the "ruff" mason package as LSP-capable) just
+        -- because it's installed, even though it's only meant to run as a plain
+        -- CLI tool here (via nvim-lint/conform below). Left enabled, its LSP
+        -- diagnostics duplicate nvim-lint's ruff diagnostics on every buffer.
+        automatic_enable = { exclude = { "jdtls", "ruff" } },
       },
       dependencies = {
         { "mason-org/mason.nvim", opts = {} }, -- the underlying installer/package manager
@@ -343,6 +363,8 @@ require("lazy").setup({
           "java-test",
           "vscode-spring-boot-tools",
           "google-java-format",
+          "ruff",
+          "debugpy",
         },
       },
     },
@@ -356,6 +378,7 @@ require("lazy").setup({
           javascriptreact = { "eslint_d" },
           typescript = { "eslint_d" },
           typescriptreact = { "eslint_d" },
+          python = { "ruff" },
         }
         vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost", "InsertLeave" }, {
           callback = function()
@@ -386,6 +409,7 @@ require("lazy").setup({
           -- takes over from jdtls's built-in (Eclipse-style) formatter so
           -- Java formatting is reproducible outside Neovim too (CI, IntelliJ)
           java = { "google-java-format" },
+          python = { "ruff_format" },
         },
         format_on_save = {
           timeout_ms = 2000, -- eslint_d + prettier run sequentially now, so give the pair more headroom
