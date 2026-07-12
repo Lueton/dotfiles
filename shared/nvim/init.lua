@@ -265,6 +265,12 @@ require("lazy").setup({
                           -- buffer behind it; 0 makes the popup fully opaque instead.
           },
         },
+        progress = {
+          -- jdtls reports a "Validate Documents" $/progress notification on
+          -- every keystroke (its document reconciler); without this it pops
+          -- up a fidget window per character typed.
+          suppress_on_insert = true,
+        },
       },
     },
     {
