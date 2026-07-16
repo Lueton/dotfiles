@@ -6,6 +6,7 @@ source "$DOTFILES_DIR/scripts/utils.sh" "$DOTFILES_DIR"
 section "Language Runtimes" "🛠️"
 
 NVM_VERSION="0.40.5"
+PNPM_VERSION="11.13.1"
 PYTHON_VERSION="3.12.10"
 
 # nvm — Node.js version manager
@@ -21,6 +22,19 @@ if [ ! -d "$HOME/.nvm" ]; then
     nvm alias default node
     set -u
     log_success "Node.js LTS installed via nvm"
+fi
+
+# pnpm — via corepack, bundled with Node
+if ! is_installed pnpm; then
+    log_info "📦  Installing pnpm v${PNPM_VERSION}..."
+    export NVM_DIR="$HOME/.nvm"
+    # shellcheck disable=SC1091
+    set +u
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    corepack enable
+    corepack prepare "pnpm@${PNPM_VERSION}" --activate
+    set -u
+    log_success "pnpm ${PNPM_VERSION} installed via corepack"
 fi
 
 # pyenv — Python version manager
