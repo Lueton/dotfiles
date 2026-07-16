@@ -250,6 +250,14 @@ require("lazy").setup({
       opts = {},
     },
     {
+      "brenoprata10/nvim-highlight-colors",
+      event = { "BufReadPre", "BufNewFile" },
+      opts = {
+        enable_tailwind = true, -- also colorizes Tailwind utility classes (e.g. "bg-red-500")
+                                 -- based on the color they resolve to, not just literal hex/rgb codes
+      },
+    },
+    {
       -- Shows LSP progress ("Indexing...") and window/showMessage notifications
       -- (e.g. spring-boot's "MCP server started" notice) as an auto-fading popup
       -- instead of a permanent line in the command area. override_vim_notify
@@ -277,7 +285,10 @@ require("lazy").setup({
       "mason-org/mason-lspconfig.nvim",
       opts = {
         -- "ts_ls" is nvim-lspconfig's name for typescript-language-server (handles JS and TS)
-        ensure_installed = { "ts_ls", "basedpyright" },
+        -- "tailwindcss" is tailwindcss-language-server; it only attaches in projects that
+        -- actually have a tailwind.config.* or a tailwindcss dependency, so it's a no-op
+        -- everywhere else
+        ensure_installed = { "ts_ls", "basedpyright", "tailwindcss" },
         -- jdtls gets its own dedicated setup below (via nvim-jdtls) with custom
         -- JDK runtimes, debug bundles, and Spring Boot support. Without this
         -- exclude, mason-lspconfig's automatic_enable would also auto-start
