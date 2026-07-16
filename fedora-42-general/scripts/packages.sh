@@ -33,6 +33,8 @@ PACKAGES=(
     gcc gcc-c++ make cmake pkgconf-pkg-config patch
     # Core utilities
     curl wget git unzip zip tar gzip ca-certificates gnupg2
+    # Git hosting CLIs
+    gh glab
     # Shell
     zsh
     # Terminal (fallback; kitty also installed via official installer)
