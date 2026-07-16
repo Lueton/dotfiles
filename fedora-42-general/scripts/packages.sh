@@ -45,6 +45,8 @@ PACKAGES=(
     htop btop fastfetch tmux brightnessctl
     # Modern CLI replacements
     ripgrep fd-find bat fzf
+    # Markdown terminal reader
+    glow
     # Terminal editor
     neovim
     # Fonts infrastructure
