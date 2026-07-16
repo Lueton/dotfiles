@@ -20,7 +20,7 @@
 	# ── Status & Info ────────────────────────────────────────
 	st          = status -sb
 	last        = log -1 HEAD --stat
-	aliases     = !git config --get-regexp '^alias\\.' | sed 's/alias\\.//;s/ /\\t→ /'
+	aliases     = !git config --get-regexp '^alias\\.' | sed 's/alias\\.//' | sed 's/ /\\t→ /'
 	contributors = shortlog --summary --numbered --no-merges
 
 	# ── Branching ────────────────────────────────────────────
