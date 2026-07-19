@@ -47,6 +47,14 @@ if ! is_installed claude; then
     npm install -g @anthropic-ai/claude-code
 fi
 
+# Codex CLI
+if ! is_installed codex; then
+    log_info "🤖  Installing Codex CLI..."
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    npm install -g @openai/codex
+fi
+
 # DBeaver Community
 if ! flatpak list --app | grep -q "io.dbeaver.DBeaverCommunity"; then
     log_info "🗄️  Installing DBeaver Community..."
